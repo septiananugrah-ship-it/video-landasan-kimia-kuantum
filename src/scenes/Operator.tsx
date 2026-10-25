@@ -25,7 +25,7 @@ export const Operator: React.FC = () => {
     {label: <Op>x</Op>, out: (u) => 1.6 * u * fin(u), tag: 'x · sin(2πx)', col: C.cyan, a: cue(2), b: cue(3)},
     {label: <Op>p</Op>, out: (u) => Math.cos(2 * Math.PI * u), tag: '∝ cos(2πx)', col: C.violet, a: cue(3), b: cue(4)},
     // T̂ sin(2πx) = +(ħ²(2π)²/2m) sin(2πx): bentuk sama, faktor positif (energi kinetik > 0)
-    {label: <Op>T</Op>, out: (u) => 1.3 * fin(u), tag: '∝ +sin(2πx)', col: C.gold, a: cue(4), b: cue(5)},
+    {label: <Op>T</Op>, out: (u) => 0.95 * fin(u), tag: '∝ +sin(2πx)', col: C.gold, a: cue(4), b: cue(5)},
     {label: <Op>H</Op>, out: (u) => fin(u) * (0.75 + 3.2 * (u - 0.5) ** 2), tag: 'T̂ψ + V(x)ψ', col: C.amber, a: cue(5), b: cue(7)},
   ];
   const cur = stages.filter((s) => t >= s.a - 0.2).pop();

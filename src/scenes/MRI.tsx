@@ -163,12 +163,12 @@ export const MRI: React.FC = () => {
           {/* pulsa gelombang radio ≈ 64 MHz masuk ke lubang magnet */}
           <g opacity={rf * (1 - img)}>
             <path
-              d={Array.from({length: 81}, (_, j) => `${j ? 'L' : 'M'}${(860 + j * 2).toFixed(1)},${(560 - 18 * Math.sin(j * 0.5 + t * 12)).toFixed(1)}`).join(' ')}
+              d={Array.from({length: 81}, (_, j) => `${j ? 'L' : 'M'}${(880 + j * 2).toFixed(1)},${(560 - 18 * Math.sin(j * 0.5 + t * 12)).toFixed(1)}`).join(' ')}
               fill="none"
               stroke={C.cyan}
               strokeWidth={4}
             />
-            <Label x={940} y={510} size={24} color={C.cyan}>
+            <Label x={960} y={505} size={24} color={C.cyan}>
               radio ≈ 64 MHz
             </Label>
           </g>
@@ -191,14 +191,14 @@ export const MRI: React.FC = () => {
             ilustrasi skematis
           </Label>
           <g opacity={mriPt}>
-            <rect x={1020} y={430} width={620} height={110 + 130 * ramp(t, cue(6) - 0.2, cue(6) + 0.4)} rx={24} fill="rgba(12,18,40,0.85)" stroke={C.cyan} strokeWidth={2} />
-            <text x={1330} y={500} textAnchor="middle" fontFamily={FONT.mono} fontSize={36} fontWeight={600} fill={C.cyan}>
+            <rect x={1100} y={430} width={600} height={110 + 130 * ramp(t, cue(6) - 0.2, cue(6) + 0.4)} rx={24} fill="rgba(12,18,40,0.85)" stroke={C.cyan} strokeWidth={2} />
+            <text x={1400} y={500} textAnchor="middle" fontFamily={FONT.mono} fontSize={36} fontWeight={600} fill={C.cyan}>
               1,5 T → ≈ 64 MHz
             </text>
-            <text x={1330} y={560} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.ink} opacity={ramp(t, cue(6) + 0.2, cue(6) + 0.8)}>
+            <text x={1400} y={560} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.ink} opacity={ramp(t, cue(6) + 0.2, cue(6) + 0.8)}>
               sinyal dari proton air &amp; lemak
             </text>
-            <text x={1330} y={610} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.mint} fontWeight={700} opacity={ramp(t, wordOf(6, 'tanpa') - 0.2, wordOf(6, 'tanpa') + 0.4)}>
+            <text x={1400} y={610} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.mint} fontWeight={700} opacity={ramp(t, wordOf(6, 'tanpa') - 0.2, wordOf(6, 'tanpa') + 0.4)}>
               tanpa sinar-X
             </text>
           </g>

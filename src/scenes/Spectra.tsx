@@ -38,7 +38,9 @@ export const Spectra: React.FC = () => {
   const others = ramp(t, cue(4) + 0.6, cue(4) + 2.0);
   const osc = win(t, cue(2), cue(3), 0.5, 0.4);
   const part2 = ramp(t, cue(5) + 0.1, cue(5) + 1.0);
-  const fp = ramp(t, cue(6) + 0.2, cue(6) + 1.6, EASE_IN_OUT);
+  // pita daerah spektrum hilang dulu, baru panel sidik jari muncul (tidak bertumpuk)
+  const bandsOut = ramp(t, cue(6) - 0.1, cue(6) + 0.4, EASE_IN_OUT);
+  const fp = ramp(t, cue(6) + 0.4, cue(6) + 1.4, EASE_IN_OUT);
   const scan = ramp(t, cue(6) + 1.8, cue(6) + 4.0, EASE_IN_OUT);
   const match = ramp(t, cue(6) + 4.0, cue(6) + 4.6, BACK);
   const ladderIn = (n: number) => ramp(t, cue(0) + 0.2 + n * 0.25, cue(0) + 0.9 + n * 0.25);
@@ -113,7 +115,7 @@ export const Spectra: React.FC = () => {
           </g>
         </g>
         {/* daerah spektrum */}
-        <g opacity={part2 * (1 - fp)}>
+        <g opacity={part2 * (1 - bandsOut)}>
           {bands.map((b, i) => (
             <g key={i} opacity={bandP[i]}>
               <rect x={b.x0 + 6} y={440} width={b.x1 - b.x0 - 12} height={90} rx={14} fill={b.col} opacity={0.22} stroke={b.col} strokeWidth={2} />

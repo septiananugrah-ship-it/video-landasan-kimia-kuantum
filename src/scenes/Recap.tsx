@@ -21,7 +21,7 @@ const NODES: {f: React.ReactNode; title: string; col: string}[] = [
       <>
         <V>i</V>
         <Hbar />
-        <Frac n={<>∂<V>Ψ</V></>} d={<>∂<V>t</V></>} size={0.62} />
+        <Frac n={<>∂<V>Ψ</V></>} d={<>∂<V>t</V></>} size={0.78} />
         &thinsp;= <Op>H</Op>
         <V>Ψ</V>
       </>
@@ -43,9 +43,10 @@ export const Recap: React.FC = () => {
   const out = ramp(t, cue(8) - 0.4, cue(8) + 0.8, EASE_IN_OUT);
   const lit = NODES.map((_, i) => ramp(t, cue(i + 1) - 0.1, cue(i + 1) + 0.6, BACK));
   const apps = APPS.map((_, i) => ramp(t, cue(7) + 0.4 + i * 0.5, cue(7) + 1.0 + i * 0.5, BACK));
-  const screen = ramp(t, cue(8) + 0.2, cue(8) + 1.4);
-  const count = Math.floor(5200 * ramp(t, cue(8) + 0.4, cue(8) + 4.5, EASE_IN_OUT));
-  const curve = ramp(t, cue(8) + 3.0, cue(8) + 4.5);
+  // heksagon aturan hilang dulu, baru layar titik elektron muncul (tidak bertumpuk)
+  const screen = ramp(t, cue(8) + 0.8, cue(8) + 1.6);
+  const count = Math.floor(5200 * ramp(t, cue(8) + 1.0, cue(8) + 5.0, EASE_IN_OUT));
+  const curve = ramp(t, cue(8) + 3.6, cue(8) + 5.0);
   const S = {x: 460, y: 250, w: 1000, h: 560};
   return (
     <AbsoluteFill>

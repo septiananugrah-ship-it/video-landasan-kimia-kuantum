@@ -3,7 +3,7 @@ import {AbsoluteFill} from 'remotion';
 import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
 import {Badge, Formula, Label, Stage, Sub, V} from '../components/primitives';
 import {useScene} from '../SceneContext';
-import {C} from '../theme';
+import {C, FONT} from '../theme';
 import {SpinArrow} from './Pauli';
 
 // Bab 13: H₂. Superposisi dua orbital 1s → orbital ikatan (σ) & antiikatan (σ*),
@@ -94,6 +94,25 @@ export const Bond: React.FC = () => {
             </g>
           </g>
         </g>
+        {/* baris 0–2: molekul H₂ sebagai gambaran awal (sebelum diagram orbital molekul) */}
+        <g opacity={ramp(t, cue(0) + 0.6, cue(0) + 1.6) * (1 - ramp(t, cue(3) - 0.2, cue(3) + 0.3))}>
+          <ellipse cx={1430} cy={520} rx={210 + 6 * Math.sin(t * 2)} ry={120} fill="url(#soft-cyan)" opacity={0.45} />
+          <line x1={1430 - 74} y1={520} x2={1430 + 74} y2={520} stroke="#8b97b8" strokeWidth={14} strokeLinecap="round" />
+          {[-1, 1].map((sd) => (
+            <g key={sd}>
+              <circle cx={1430 + sd * 74} cy={520} r={44} fill="#f2f5ff" stroke="#0b0f1c" strokeWidth={3} />
+              <text x={1430 + sd * 74} y={522} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.sans} fontWeight={700} fontSize={34} fill="#1d2440">
+                H
+              </text>
+            </g>
+          ))}
+          <Label x={1430} y={680} size={30} color={C.ink} weight={700}>
+            H₂ · 2 proton, 2 elektron
+          </Label>
+          <Label x={1430} y={722} size={26} color={C.muted}>
+            ikatan kimia paling sederhana
+          </Label>
+        </g>
         {/* diagram orbital molekul */}
         <g opacity={mo}>
           {[
@@ -143,7 +162,7 @@ export const Bond: React.FC = () => {
             E
           </Label>
           {[0.5, 1, 1.5, 2, 2.5, 3].map((r) => (
-            <Label key={r} x={mx(r)} y={MP.y0 + MP.h + 62} size={20} color={C.muted} font="mono">
+            <Label key={r} x={mx(r)} y={MP.y0 + MP.h + 62} size={22} color={C.muted} font="mono">
               {String(r).replace('.', ',')}
             </Label>
           ))}
@@ -156,7 +175,7 @@ export const Bond: React.FC = () => {
           </g>
           <g opacity={d0}>
             <line x1={mx(0.55)} y1={my(v0)} x2={mx(1.0)} y2={my(v0)} stroke={C.ink} strokeWidth={3} />
-            <Label x={mx(0.5) - 8} y={my(v0)} size={20} color={C.muted} anchor="end">
+            <Label x={mx(0.5) - 8} y={my(v0)} size={22} color={C.muted} anchor="end">
               v = 0
             </Label>
             <line x1={mx(1.9)} y1={my(v0) - 6} x2={mx(1.9)} y2={my(0) + 8} stroke={C.mint} strokeWidth={5} markerEnd="url(#arrow-mint)" />

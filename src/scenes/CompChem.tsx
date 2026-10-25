@@ -195,7 +195,7 @@ export const CompChem: React.FC = () => {
             <rect x={1270} y={728} width={200} height={14} rx={7} fill="#2a3352" />
             {/* garis kode yang bergulir di layar */}
             {Array.from({length: 6}, (_, k) => {
-              const yy = 470 + ((k * 34 + t * 40) % 204);
+              const yy = 462 + ((k * 26 + t * 40) % 156);
               return <rect key={k} x={1180} y={yy} width={120 + ((k * 73) % 220)} height={10} rx={5} fill={C.cyan} opacity={0.35} />;
             })}
             <text x={1370} y={680} textAnchor="middle" fontFamily={FONT.serif} fontStyle="italic" fontSize={34} fill={C.gold}>

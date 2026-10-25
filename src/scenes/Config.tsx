@@ -62,33 +62,33 @@ export const Config: React.FC = () => {
         {/* baris 0: larangan Pauli bekerja — kotak penuh menolak elektron ketiga */}
         <g opacity={gate}>
           {[
-            {name: '1s', y: 680},
-            {name: '2s', y: 460},
+            {name: '1s', x: 860, y: 680, lx: 770, anchor: 'end' as const},
+            {name: '2s', x: 1100, y: 470, lx: 1190, anchor: 'start' as const},
           ].map((l) => (
             <g key={l.name}>
-              <rect x={960 - 60} y={l.y - 60} width={120} height={120} rx={12} fill="rgba(12,18,40,0.85)" stroke={l.name === '1s' && bounce > 0 && bounce < 0.6 ? C.red : C.faint} strokeWidth={4} />
-              <Label x={960 - 90} y={l.y} size={34} color={C.ink} anchor="end" font="mono">
+              <rect x={l.x - 60} y={l.y - 60} width={120} height={120} rx={12} fill="rgba(12,18,40,0.85)" stroke={l.name === '1s' && bounce > 0 && bounce < 0.6 ? C.red : C.faint} strokeWidth={4} />
+              <Label x={l.lx} y={l.y} size={34} color={C.ink} anchor={l.anchor} font="mono">
                 {l.name}
               </Label>
             </g>
           ))}
-          <SpinArrow x={960 - 22} y={mix(340, 680, g1)} up len={80} opacity={g1 > 0 ? 1 : 0} />
-          <SpinArrow x={960 + 22} y={mix(340, 680, g2)} up={false} len={80} opacity={g2 > 0 ? 1 : 0} />
-          {/* elektron ketiga: jatuh, memantul dari 1s yang penuh, lalu menetap di 2s */}
+          <SpinArrow x={860 - 22} y={mix(340, 680, g1)} up len={80} opacity={g1 > 0 ? 1 : 0} />
+          <SpinArrow x={860 + 22} y={mix(340, 680, g2)} up={false} len={80} opacity={g2 > 0 ? 1 : 0} />
+          {/* elektron ketiga: jatuh ke 1s yang sudah penuh, memantul, lalu menetap di 2s */}
           <SpinArrow
-            x={bounce > 0 ? mix(1110, 960, bounce) : 1110}
-            y={bounce > 0 ? mix(560, 460, bounce) - 90 * Math.sin(Math.PI * bounce) : mix(340, 560, g3)}
+            x={bounce > 0 ? mix(860, 1100, bounce) : 860}
+            y={bounce > 0 ? mix(560, 470, bounce) - 90 * Math.sin(Math.PI * bounce) : mix(340, 560, g3)}
             up
             len={80}
             color={bounce > 0.95 ? C.gold : C.red}
             opacity={g3 > 0 ? 1 : 0}
           />
           <g opacity={ramp(t, cue(0) + 1.5, cue(0) + 1.9) * (1 - ramp(t, cue(0) + 2.4, cue(0) + 2.8))}>
-            <Label x={1200} y={650} size={30} color={C.red} weight={700} anchor="start">
+            <Label x={950} y={700} size={30} color={C.red} weight={700} anchor="start">
               ✗ 1s penuh (↑↓)
             </Label>
           </g>
-          <Label x={1200} y={460} size={28} color={C.gold} weight={600} anchor="start" opacity={ramp(t, cue(0) + 2.3, cue(0) + 2.8)}>
+          <Label x={1100} y={590} size={28} color={C.gold} weight={600} opacity={ramp(t, cue(0) + 2.3, cue(0) + 2.8)}>
             elektron ke-3 naik ke 2s
           </Label>
         </g>
