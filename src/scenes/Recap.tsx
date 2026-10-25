@@ -40,11 +40,11 @@ const APPS = ['tabel periodik', 'ikatan kimia', 'spektrum', 'MRI'];
 export const Recap: React.FC = () => {
   const {t, cue} = useScene();
   const intro = ramp(t, cue(0) - 0.3, cue(0) + 1);
-  const out = ramp(t, cue(8) - 0.4, cue(8) + 0.8, EASE_IN_OUT);
+  const out = ramp(t, cue(8) - 0.4, cue(8) + 0.5, EASE_IN_OUT);
   const lit = NODES.map((_, i) => ramp(t, cue(i + 1) - 0.1, cue(i + 1) + 0.6, BACK));
   const apps = APPS.map((_, i) => ramp(t, cue(7) + 0.4 + i * 0.5, cue(7) + 1.0 + i * 0.5, BACK));
   // heksagon aturan hilang dulu, baru layar titik elektron muncul (tidak bertumpuk)
-  const screen = ramp(t, cue(8) + 0.8, cue(8) + 1.6);
+  const screen = ramp(t, cue(8) + 0.5, cue(8) + 1.3);
   const count = Math.floor(5200 * ramp(t, cue(8) + 1.0, cue(8) + 5.0, EASE_IN_OUT));
   const curve = ramp(t, cue(8) + 3.6, cue(8) + 5.0);
   const S = {x: 460, y: 250, w: 1000, h: 560};
