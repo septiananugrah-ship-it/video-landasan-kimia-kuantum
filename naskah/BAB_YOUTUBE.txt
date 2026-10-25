@@ -1,0 +1,29 @@
+Kimia Kuantum — Aturan Main Kuantum: Landasan Kimia Kuantum (Modul 2)
+
+00:00 Pembuka: elektron satu per satu
+00:46 Peta video
+
+BAGIAN 1 · Prinsip & teori dasar
+01:16 Bab 01 · Fungsi gelombang
+02:14 Bab 02 · Normalisasi
+03:11 Bab 03 · Superposisi & ortogonalitas
+04:11 Bab 04 · Operator
+05:05 Bab 05 · Fungsi eigen & nilai eigen
+06:09 Bab 06 · Pengukuran
+07:05 Bab 07 · Nilai harapan
+08:04 Bab 08 · Komutator & ketidakpastian
+08:58 Bab 09 · Persamaan Schrödinger
+09:44 Bab 10 · Keadaan stasioner
+10:44 Bab 11 · Partikel identik & spin
+
+BAGIAN 2 · Implementasi dalam kimia
+11:47 Bab 12 · Konfigurasi elektron
+12:42 Bab 13 · Superposisi membentuk ikatan
+13:39 Bab 14 · Spektroskopi
+
+BAGIAN 3 · Penerapan di industri
+14:37 Bab 15 · NMR & MRI
+15:34 Bab 16 · Kimia komputasi
+16:21 Bab 17 · Komputer kuantum
+
+17:09 Bab 18 · Merangkai semuanya

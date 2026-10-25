@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backsound orisinal untuk "Aturan Main Kuantum".
+"""Backsound orisinal untuk "Aturan Main Kuantum" (Modul 2).
 
 Disintesis sepenuhnya dengan numpy (tanpa sampel berlisensi) dan diselaraskan
 dengan peta scene dari `npm run timeline` (public/timeline.json):
@@ -18,7 +18,7 @@ import numpy as np
 
 SR = 44100
 ROOT = Path(__file__).resolve().parent.parent
-rng = np.random.default_rng(7)
+rng = np.random.default_rng(12)
 
 
 def midi(n):

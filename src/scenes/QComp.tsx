@@ -11,7 +11,7 @@ const BL = {x: 1250, y: 540, r: 190};
 
 export const QComp: React.FC = () => {
   const {t, cue} = useScene();
-  const bit = win(t, cue(1) - 0.2, cue(3) - 0.1, 0.6, 0.5);
+  const bit = win(t, cue(0) + 0.3, cue(3) - 0.1, 0.6, 0.5);
   const bloch = ramp(t, cue(1) + 1.0, cue(1) + 2.0) * (1 - ramp(t, cue(3) - 0.4, cue(3)));
   const meas = ramp(t, cue(2) + 0.6, cue(2) + 1.2, EASE_IN_OUT);
   const chip = ramp(t, cue(3) + 0.1, cue(3) + 1.1) * (1 - ramp(t, cue(5) - 0.4, cue(5)));

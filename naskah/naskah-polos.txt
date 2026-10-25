@@ -1,0 +1,209 @@
+[00:00] Elektron satu per satu
+
+Tahun 1989, sebuah tim di laboratorium Hitachi menembakkan elektron ke sebuah layar, satu per satu.
+Setiap elektron tiba sebagai satu titik kecil, di tempat yang tampaknya acak.
+Tetapi setelah ribuan elektron, titik-titik itu menyusun pola garis terang dan gelap.
+Itu pola interferensi, ciri khas gelombang.
+Jadi, apa yang menentukan di mana setiap elektron mendarat?
+Jawabannya: sebuah fungsi gelombang, dan enam aturan main yang menjelaskan cara membacanya.
+
+[00:46] Peta video
+
+Video ini membahas landasan kimia kuantum dalam tiga bagian.
+Pertama, prinsip dan teori dasarnya: fungsi gelombang, operator, pengukuran, dan persamaan Schrödinger.
+Kedua, implementasinya dalam kimia: konfigurasi elektron, ikatan kimia, dan spektroskopi.
+Dan ketiga, penerapannya di industri: MRI, kimia komputasi, dan komputer kuantum.
+
+[01:16] Bab 01 — Fungsi gelombang
+
+Aturan pertama: seluruh informasi tentang sebuah sistem tersimpan dalam satu fungsi, yaitu fungsi gelombang psi.
+Psi bergantung pada posisi dan waktu, dan nilainya boleh berupa bilangan kompleks.
+Bayangkan setiap titik membawa sebuah panah kecil: panjangnya adalah besar psi, arahnya adalah fasenya.
+Psi sendiri tidak bisa diukur langsung.
+Yang bermakna fisis adalah kuadrat besarnya: psi bintang kali psi.
+Menurut Max Born, besaran ini adalah rapat peluang.
+Peluang menemukan partikel di antara x dan x tambah d x sama dengan psi kuadrat kali d x.
+Di mana psi kuadrat besar, elektron sering ditemukan. Di mana nol, elektron tidak pernah muncul.
+Inilah mengapa titik-titik elektron tadi menumpuk membentuk pola: mereka mengikuti psi kuadrat.
+
+[02:14] Bab 02 — Normalisasi
+
+Karena psi kuadrat adalah rapat peluang, peluang menemukan partikel di mana saja harus tepat satu.
+Syarat ini disebut normalisasi: integral psi kuadrat di seluruh ruang sama dengan satu.
+Contohnya fungsi sinus pi x per L di dalam kotak selebar L.
+Luas di bawah sinus kuadratnya adalah L per dua, jadi fungsi itu harus dikalikan konstanta akar dua per L.
+Jika norma awalnya bukan satu, misalnya dua puluh tujuh, itu hanya berarti skalanya belum diatur.
+Itu bukan dua puluh tujuh partikel, dan bukan peluang yang lebih dari satu.
+Tidak semua fungsi boleh menjadi fungsi gelombang.
+Ia harus bernilai tunggal, kontinu, dan dapat dinormalisasi.
+Fungsi yang bercabang, melompat, atau membesar tanpa batas langsung gugur.
+
+[03:11] Bab 03 — Superposisi & ortogonalitas
+
+Jika phi satu dan phi dua adalah keadaan yang sah, jumlah keduanya juga sah. Ini prinsip superposisi.
+Gelombang sinus dengan satu punuk dan dua punuk bisa dijumlahkan menjadi bentuk baru yang miring.
+Agar jumlah seperti ini mudah dihitung, kita memakai fungsi basis yang saling ortogonal.
+Ortogonal berarti integral hasil kali keduanya nol: luas bagian positif tepat menghapus bagian negatif.
+Basis yang ortogonal dan ternormalisasi disebut ortonormal.
+Contoh dari modul: psi sama dengan C kali, dua phi satu, tambah i phi dua.
+Normalisasi memberi C kuadrat kali, empat tambah satu, sama dengan satu. Jadi C sama dengan satu per akar lima.
+Kuadrat besar koefisien itu, empat per lima dan satu per lima, nanti menjadi peluang hasil pengukuran.
+
+[04:11] Bab 04 — Operator
+
+Aturan kedua: setiap besaran fisis yang dapat diukur diwakili oleh sebuah operator.
+Operator adalah mesin yang mengubah satu fungsi menjadi fungsi lain.
+Operator posisi cukup mengalikan dengan x.
+Operator momentum adalah minus i h bar kali turunan terhadap x.
+Dengan memasukkannya ke p kuadrat per dua m, kita mendapat operator energi kinetik: minus h bar kuadrat per dua m, kali turunan kedua.
+Energi kinetik ditambah energi potensial menghasilkan operator energi total, yaitu Hamiltonian, H topi.
+Operator kuantum harus linear dan Hermitian.
+Sifat Hermitian menjamin bahwa setiap hasil pengukurannya berupa bilangan real, bukan bilangan kompleks.
+
+[05:05] Bab 05 — Fungsi eigen & nilai eigen
+
+Aturan ketiga: hasil pengukuran hanya boleh berupa nilai eigen dari operatornya.
+Fungsi eigen adalah fungsi istimewa: setelah dikenai operator, bentuknya tetap, hanya dikalikan sebuah konstanta.
+Konstanta itulah nilai eigennya.
+Ambil e pangkat i k x. Operator momentum mengembalikannya utuh, dikalikan h bar k. Jadi momentumnya pasti h bar k.
+Operator energi kinetik juga mengembalikannya utuh, dengan nilai eigen h bar kuadrat k kuadrat per dua m.
+Tetapi operator posisi menghasilkan x kali fungsinya. x bukan konstanta, jadi ini bukan persamaan eigen.
+Satu fungsi bisa menjadi fungsi eigen untuk satu besaran, tetapi tidak untuk besaran lain.
+Contoh angka dari modul: untuk k sepuluh pangkat sepuluh per meter, energi elektronnya sekitar tiga koma delapan satu elektronvolt.
+
+[06:09] Bab 06 — Pengukuran
+
+Lalu apa yang terjadi bila keadaan bukan fungsi eigen, melainkan superposisi?
+Uraikan keadaan itu ke dalam fungsi eigen operatornya. Setiap fungsi eigen mendapat koefisien c n.
+Satu kali pengukuran selalu memberi tepat satu nilai eigen, dan peluangnya sama dengan c n kuadrat.
+Contoh dari modul: keadaan campuran orbital satu s dan dua s pada atom hidrogen.
+Peluang mendapat energi satu s adalah tiga per empat, dan energi dua s satu per empat.
+Kita tidak bisa meramal hasil satu pengukuran. Yang bisa diramal hanyalah statistiknya.
+Dan setelah diukur, keadaan berubah: ia runtuh menjadi fungsi eigen yang sesuai dengan hasilnya.
+Bila diukur lagi segera, hasilnya sama persis.
+
+[07:05] Bab 07 — Nilai harapan
+
+Aturan keempat memberi rata-rata dari banyak pengukuran: nilai harapan.
+Rumusnya: integral psi bintang, kali operator yang dikenakan pada psi.
+Misalkan energi satu elektronvolt muncul dengan peluang seperempat, dan empat elektronvolt dengan peluang tiga perempat.
+Nilai harapannya tiga koma dua lima elektronvolt.
+Padahal satu kali pengukuran tidak akan pernah menghasilkan tiga koma dua lima. Hanya satu atau empat.
+Sebaran hasilnya diukur oleh ketidakpastian: akar dari rata-rata kuadrat dikurangi kuadrat rata-rata.
+Untuk contoh ini, ketidakpastian energinya sekitar satu koma tiga elektronvolt.
+Hati-hati: momentum rata-rata nol tidak berarti partikelnya diam. Ia bisa bergerak ke kiri dan ke kanan dengan peluang sama.
+
+[08:04] Bab 08 — Komutator & ketidakpastian
+
+Bisakah dua besaran diketahui pasti sekaligus? Jawabannya ada pada urutan operator.
+Komutator A dan B adalah A B dikurangi B A.
+Untuk posisi dan momentum, x p minus p x bekerja pada psi menghasilkan i h bar kali psi.
+Suku x kali turunan psi saling menghapus, dan yang tersisa hanya i h bar.
+Komutator yang tidak nol berarti kedua besaran tidak dapat sama-sama pasti.
+Hasilnya adalah prinsip ketidakpastian Heisenberg: delta x kali delta p paling kecil h bar per dua.
+Paket gelombang yang sempit dalam posisi harus lebar dalam momentum, dan sebaliknya.
+Sebaliknya, operator yang komut, seperti L kuadrat dan L z pada atom, dapat memiliki nilai pasti bersamaan.
+
+[08:58] Bab 09 — Persamaan Schrödinger
+
+Aturan kelima menjelaskan bagaimana keadaan berubah terhadap waktu.
+Itulah persamaan Schrödinger bergantung waktu: i h bar kali turunan psi terhadap waktu sama dengan H topi psi.
+Persamaan ini sepenuhnya deterministik.
+Jika psi diketahui sekarang, psi di masa depan dapat dihitung dengan pasti.
+Keacakan hanya muncul pada saat pengukuran.
+Lihat paket gelombang elektron bebas ini. Ia merambat sambil melebar, karena komponen momentumnya bergerak dengan kecepatan berbeda.
+Warna menunjukkan fase psi yang berputar lebih cepat untuk komponen berenergi lebih tinggi.
+
+[09:44] Bab 10 — Keadaan stasioner
+
+Jika potensial tidak bergantung waktu, psi dapat dipisah: fungsi ruang dikali faktor fase e pangkat minus i E t per h bar.
+Bagian ruangnya memenuhi persamaan Schrödinger tidak bergantung waktu: H topi psi sama dengan E psi.
+Ini persamaan eigen untuk energi. Solusinya adalah tingkat-tingkat energi yang diizinkan.
+Faktor fase itu berputar seperti jarum jam, tetapi panjangnya tetap.
+Karena itu psi kuadrat sama sekali tidak berubah. Keadaan ini disebut stasioner.
+Lain halnya dengan superposisi dua energi berbeda. Kedua jam berputar dengan kecepatan berbeda.
+Hasilnya, rapat peluang berayun bolak-balik dengan frekuensi selisih energi dibagi h.
+Muatan yang berayun seperti ini adalah antena kecil. Inilah awal mula serapan dan pancaran cahaya.
+
+[10:44] Bab 11 — Partikel identik & spin
+
+Aturan keenam berlaku untuk partikel identik. Dua elektron tidak bisa diberi label atau ditandai.
+Elektron juga memiliki spin, momentum sudut intrinsik yang hanya punya dua arah: atas atau bawah.
+Tahun 1922, Stern dan Gerlach melewatkan berkas atom perak melalui magnet tak seragam. Berkas itu terbelah tepat menjadi dua.
+Elektron termasuk fermion. Jika dua elektron dipertukarkan, fungsi gelombangnya harus berganti tanda.
+Partikel lain, seperti foton dan inti helium empat, termasuk boson: fungsinya tidak berganti tanda.
+Sekarang paksa dua elektron menempati spin-orbital yang sama.
+Fungsi antisimetrinya menjadi selisih dua suku yang identik, sehingga hasilnya nol.
+Fungsi nol bukan keadaan fisis. Inilah larangan Pauli: tidak ada dua elektron dengan keempat bilangan kuantum yang sama.
+
+[11:47] Bab 12 — Konfigurasi elektron
+
+Larangan Pauli adalah alasan kimia ada.
+Tanpa larangan itu, semua elektron akan jatuh ke orbital terendah, satu s, dan semua unsur akan berperilaku mirip.
+Dengan larangan Pauli, setiap orbital hanya menampung dua elektron berspin berlawanan.
+Elektron mengisi orbital dari energi terendah, membentuk kulit-kulit.
+Karbon, dengan enam elektron, memiliki konfigurasi satu s dua, dua s dua, dua p dua.
+Dua elektron dua p itu menempati orbital berbeda dengan spin sejajar, sesuai aturan Hund.
+Kulit yang terisi penuh membuat gas mulia stabil. Elektron di kulit terluar menentukan valensi.
+Pola pengisian inilah yang menghasilkan baris dan golongan pada tabel periodik.
+
+[12:42] Bab 13 — Superposisi membentuk ikatan
+
+Ikatan kimia paling sederhana, molekul hidrogen, juga lahir dari aturan yang sama.
+Ketika dua atom hidrogen mendekat, orbital satu s keduanya dapat bersuperposisi.
+Jika dijumlahkan sefase, kedua gelombang saling menguatkan di antara inti.
+Elektron yang berkumpul di sana menarik kedua inti. Ini orbital ikatan, berenergi lebih rendah.
+Jika dikurangkan, muncul simpul di tengah. Ini orbital antiikatan, berenergi lebih tinggi.
+Dua elektron dengan spin berlawanan menempati orbital ikatan. Larangan Pauli mengizinkannya.
+Kurva energinya memiliki lembah pada jarak sekitar nol koma tujuh empat angstrom.
+Untuk memutus ikatan ini dibutuhkan sekitar empat ratus tiga puluh enam kilojoule per mol.
+
+[13:39] Bab 14 — Spektroskopi
+
+Spektroskopi adalah cara kimiawan bertanya langsung kepada keadaan eigen energi.
+Molekul hanya menyerap foton yang energinya tepat sama dengan selisih dua tingkat energi: delta E sama dengan h nu.
+Selama transisi, keadaan berada dalam superposisi, dan muatannya berayun pada frekuensi cahaya itu.
+Contohnya atom hidrogen: transisi dari tingkat tiga ke tingkat dua memancarkan garis merah enam ratus lima puluh enam nanometer.
+Energi fotonnya sekitar satu koma delapan sembilan elektronvolt.
+Setiap jenis gerak memberi daerah spektrum sendiri: elektron di ultraungu dan cahaya tampak, vibrasi di inframerah, dan rotasi di gelombang mikro.
+Karena tingkat energi tiap molekul berbeda, spektrumnya menjadi sidik jari untuk mengenalinya.
+
+[14:37] Bab 15 — NMR & MRI
+
+Spin bukan hanya milik elektron. Proton di inti hidrogen juga memiliki spin setengah.
+Di dalam medan magnet kuat, spin itu terbelah menjadi dua tingkat energi, mirip berkas Stern-Gerlach.
+Selisih energinya sesuai dengan gelombang radio. Untuk proton, sekitar empat puluh dua koma enam megahertz per tesla.
+Di laboratorium kimia, spektrometer NMR empat ratus megahertz memakai magnet sekitar sembilan koma empat tesla.
+Lingkungan kimia menggeser frekuensi itu sedikit, sehingga NMR dapat memetakan struktur molekul.
+Di rumah sakit, prinsip yang sama menjadi MRI. Mesin satu koma lima tesla bekerja pada sekitar enam puluh empat megahertz.
+Proton di dalam air dan lemak tubuh memberi sinyal, dan gambar organ disusun tanpa sinar-X.
+
+[15:34] Bab 16 — Kimia komputasi
+
+Persamaan Schrödinger untuk molekul nyata tidak dapat diselesaikan dengan pensil.
+Tetapi komputer dapat menyelesaikannya secara pendekatan, dengan memakai semua aturan tadi.
+Fungsi gelombang disusun dari fungsi basis, dibuat antisimetri sesuai Pauli, lalu energinya diminimalkan.
+Teori fungsional kerapatan, atau DFT, bahkan bekerja langsung dengan rapat elektron.
+Walter Kohn dan John Pople menerima Nobel Kimia tahun 1998 untuk metode-metode ini.
+Kini industri farmasi, katalis, dan baterai memakai perhitungan kuantum untuk menyaring kandidat molekul sebelum disintesis di laboratorium.
+
+[16:21] Bab 17 — Komputer kuantum
+
+Aturan main kuantum kini juga dipakai sebagai teknologi.
+Bit biasa bernilai nol atau satu. Qubit dapat berada dalam superposisi keduanya.
+Saat dibaca, qubit runtuh menjadi nol atau satu, dengan peluang c kuadrat. Persis aturan pengukuran yang kita pelajari.
+Salah satu jenis qubit adalah rangkaian superkonduktor yang tingkat energinya terkuantisasi.
+Nobel Fisika 2025 diberikan untuk penemuan kuantisasi energi dan penerowongan kuantum pada rangkaian listrik semacam ini.
+Salah satu tujuan utamanya adalah kimia: menghitung molekul yang terlalu rumit bagi komputer biasa.
+
+[17:09] Bab 18 — Merangkai semuanya
+
+Mari kita rangkai keenam aturan main itu.
+Satu: keadaan dinyatakan oleh psi, dan psi kuadrat adalah rapat peluang.
+Dua: setiap besaran fisis diwakili oleh operator linear Hermitian.
+Tiga: hasil ukur adalah nilai eigen, dengan peluang c n kuadrat.
+Empat: rata-rata banyak pengukuran adalah nilai harapan.
+Lima: psi berubah menurut persamaan Schrödinger.
+Enam: fungsi fermion identik antisimetri, sehingga berlaku larangan Pauli.
+Dari enam aturan ini lahir tabel periodik, ikatan kimia, spektrum, hingga MRI.
+Dan pola titik-titik elektron di layar tadi ternyata hanya psi kuadrat yang sedang dibaca, satu elektron demi satu elektron.

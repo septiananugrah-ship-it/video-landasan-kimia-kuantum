@@ -65,7 +65,7 @@ writeFileSync(
 
 // ---------- Daftar bab untuk deskripsi YouTube / LMS ----------
 const PART_NAMES: Record<number, string> = {1: 'Prinsip & teori dasar', 2: 'Implementasi dalam kimia', 3: 'Penerapan di industri'};
-const chapters: string[] = ['Kimia Kuantum — Aturan Main Kuantum: Gerak Translasi (Modul 3)', ''];
+const chapters: string[] = ['Kimia Kuantum — Aturan Main Kuantum: Landasan Kimia Kuantum (Modul 2)', ''];
 let lastPart = 0;
 for (const s of TIMELINE.scenes) {
   if (s.id === 'title' || s.id === 'outro') continue;
@@ -74,7 +74,7 @@ for (const s of TIMELINE.scenes) {
     lastPart = s.part;
   }
   if (!s.part && lastPart && s.chapter) chapters.push('');
-  chapters.push(`${formatTime(s.start)} ${s.chapter ? `Bab ${s.chapter} · ` : ''}${s.id === 'hook' ? 'Pembuka: tiga botol berpendar' : s.title}`);
+  chapters.push(`${formatTime(s.start)} ${s.chapter ? `Bab ${s.chapter} · ` : ''}${s.id === 'hook' ? 'Pembuka: elektron satu per satu' : s.title}`);
 }
 writeFileSync('naskah/BAB_YOUTUBE.txt', chapters.join('\n') + '\n');
 
