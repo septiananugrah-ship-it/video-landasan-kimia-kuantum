@@ -1,7 +1,7 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {BACK, EASE_IN_OUT, ramp} from '../anim';
-import {Glow, Stage} from '../components/primitives';
+import {Frac, Glow, Hbar, Op, Stage, V} from '../components/primitives';
 import {fringe} from '../components/qm';
 import {useScene} from '../SceneContext';
 import {C, FONT} from '../theme';
@@ -11,12 +11,24 @@ import {DotScreen} from './Hook';
 const CX = 960;
 const CY = 540;
 const RAD = 250;
-const NODES = [
+const NODES: {f: React.ReactNode; title: string; col: string}[] = [
   {f: '|ψ|²', title: 'keadaan', col: C.cyan},
   {f: 'Â', title: 'operator', col: C.violet},
   {f: 'Âφ = aφ', title: 'nilai eigen', col: C.gold},
   {f: '⟨A⟩', title: 'nilai harapan', col: C.mint},
-  {f: 'iħ∂Ψ/∂t = ĤΨ', title: 'Schrödinger', col: C.amber},
+  {
+    f: (
+      <>
+        <V>i</V>
+        <Hbar />
+        <Frac n={<>∂<V>Ψ</V></>} d={<>∂<V>t</V></>} size={0.62} />
+        &thinsp;= <Op>H</Op>
+        <V>Ψ</V>
+      </>
+    ),
+    title: 'Schrödinger',
+    col: C.amber,
+  },
   {f: 'Ψ(1,2) = −Ψ(2,1)', title: 'Pauli', col: C.red},
 ];
 const pos = (i: number) => {
@@ -74,7 +86,8 @@ export const Recap: React.FC = () => {
             filter="url(#glow)"
             opacity={curve}
           />
-          <text x={S.x + S.w / 2} y={S.y + 60} textAnchor="middle" fontFamily={FONT.serif} fontStyle="italic" fontSize={48} fill={C.violet} opacity={curve}>
+          <rect x={S.x + S.w / 2 - 70} y={S.y + 18} width={140} height={60} rx={14} fill="rgba(6,10,24,0.85)" stroke={C.violet} strokeWidth={2} opacity={curve} />
+          <text x={S.x + S.w / 2} y={S.y + 64} textAnchor="middle" fontFamily={FONT.serif} fontStyle="italic" fontSize={44} fill={C.violet} opacity={curve}>
             |ψ|²
           </text>
         </g>

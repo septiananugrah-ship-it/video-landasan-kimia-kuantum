@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, ramp, slot, win} from '../anim';
 import {Formula, Frac, Label, Stage, Sqrt, Sub, Sup, V} from '../components/primitives';
 import {Phasor} from '../components/qm';
 import {psi} from '../components/viz';
@@ -35,7 +35,8 @@ export const Superpos: React.FC = () => {
   // bobot superposisi bergeser pelan (menunjukkan "bentuk baru")
   const w2 = mix(0, 0.9, ramp(t, cue(1) - 0.2, cue(1) + 2.6, EASE_IN_OUT)) + 0.25 * Math.sin(Math.max(0, t - cue(1) - 2.6) * 0.8);
   const sumF = (u: number) => (psi(1, u) + w2 * psi(2, u)) / Math.sqrt(1 + w2 * w2);
-  const prod = win(t, cue(2) + 0.6, cue(5) - 0.2, 0.8, 0.5);
+  // panel kanan berganti: kurva jumlah hilang dulu, baru hasil kali φ₁φ₂ muncul (tidak bertumpuk)
+  const prod = win(t, cue(2) + 0.85, cue(5) - 0.2, 0.8, 0.5);
   const cancel = ramp(t, wordOf(3, 'menghapus') - 0.4, wordOf(3, 'menghapus') + 0.8);
   const plane = ramp(t, cue(5) + 0.2, cue(5) + 1.2);
   const squares = ramp(t, cue(6) - 0.2, cue(6) + 1.0);
@@ -151,7 +152,7 @@ export const Superpos: React.FC = () => {
           </Label>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(0) + 0.3, cue(2) - 0.1, 0.7, 0.4)} accent={C.mint} caption="prinsip superposisi">
+      <Formula x={960} y={250} p={slot(t, cue(0) + 0.3, cue(2) - 0.05)} accent={C.mint} caption="prinsip superposisi">
         <V>ψ</V>&nbsp;=&nbsp;<V>c</V>
         <Sub>1</Sub>
         <V>φ</V>
@@ -160,7 +161,7 @@ export const Superpos: React.FC = () => {
         <V>φ</V>
         <Sub>2</Sub>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(3), cue(4) - 0.1, 0.7, 0.4)} accent={C.gold} caption="ortogonal: integral hasil kali = 0">
+      <Formula x={960} y={250} p={slot(t, cue(3), cue(4) - 0.05)} accent={C.gold} caption="ortogonal: integral hasil kali = 0">
         <span style={{fontSize: '1.2em'}}>∫</span>
         <Sub>0</Sub>
         <Sup>L</Sup>&thinsp;<V>φ</V>
@@ -168,19 +169,19 @@ export const Superpos: React.FC = () => {
         <V>φ</V>
         <Sub>2</Sub>&thinsp;<V>dx</V>&nbsp;=&nbsp;0
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(4), cue(5) - 0.1, 0.7, 0.4)} accent={C.gold} caption="ortonormal: δ = 1 bila m = n, 0 bila m ≠ n">
+      <Formula x={960} y={250} p={slot(t, cue(4) - 0.05, cue(5) - 0.05)} accent={C.gold} caption="ortonormal: δ = 1 bila m = n, 0 bila m ≠ n">
         ⟨<V>φ</V>
         <Sub>m</Sub>|<V>φ</V>
         <Sub>n</Sub>⟩&nbsp;=&nbsp;<V>δ</V>
         <Sub>mn</Sub>
       </Formula>
-      <Formula x={1340} y={330} p={win(t, cue(5), cue(6) - 0.1, 0.7, 0.4)} accent={C.violet} caption="contoh modul (basis ortonormal)">
+      <Formula x={1340} y={330} p={slot(t, cue(5), cue(6) - 0.05)} accent={C.violet} caption="contoh modul (basis ortonormal)">
         <V>ψ</V>&nbsp;=&nbsp;<V>C</V>(2<V>φ</V>
         <Sub>1</Sub>&nbsp;+&nbsp;<V>i</V>
         <V>φ</V>
         <Sub>2</Sub>)
       </Formula>
-      <Formula x={1340} y={330} p={win(t, cue(6), cue(7) - 0.1, 0.7, 0.4)} accent={C.violet} caption="|2|² + |i|² = 5">
+      <Formula x={1340} y={330} p={slot(t, cue(6) - 0.05, cue(7) - 0.05)} accent={C.violet} caption="|2|² + |i|² = 5">
         |<V>C</V>|<Sup>2</Sup>(4 + 1) = 1 ⇒ <V>C</V>&nbsp;=&nbsp;
         <Frac n="1" d={<Sqrt>5</Sqrt>} />
       </Formula>

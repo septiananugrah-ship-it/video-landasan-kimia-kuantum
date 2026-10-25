@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, ramp, slot} from '../anim';
 import {Badge, Card, Formula, Frac, Label, Stage, Sqrt, Sub, V} from '../components/primitives';
 import {Electron} from '../components/viz';
 import {useScene} from '../SceneContext';
@@ -29,21 +29,27 @@ const Particle: React.FC<{x: number; y: number; kind: 'e' | 'b'; label?: string;
 
 export const Pauli: React.FC = () => {
   const {t, cue} = useScene();
-  const ident = win(t, cue(0) + 0.2, cue(1) - 0.1, 0.6, 0.4);
-  const spin = win(t, cue(1), cue(2) - 0.1, 0.6, 0.4);
+  // adegan berurutan di tengah layar: yang lama hilang dulu sebelum yang baru muncul
+  const ident = slot(t, cue(0) + 0.2, cue(1), 0.6, 0.4);
+  const spin = slot(t, cue(1), cue(2) - 0.05, 0.6, 0.4);
   const flip = Math.sin((t - cue(1)) * 2.4) > 0;
-  const sg = win(t, cue(2) - 0.1, cue(3) - 0.1, 0.7, 0.5);
+  const sg = slot(t, cue(2) - 0.05, cue(3) + 0.05, 0.7, 0.45);
   const beam = ramp(t, cue(2) + 1.2, cue(2) + 3.2, EASE_IN_OUT);
   const spots = ramp(t, cue(2) + 3.0, cue(2) + 4.0);
-  const ex = win(t, cue(3), cue(5) - 0.1, 0.6, 0.4);
+  const ex = slot(t, cue(3) + 0.05, cue(5) - 0.05, 0.6, 0.4);
   const swapF = ramp(t, cue(3) + 1.0, cue(3) + 2.6, EASE_IN_OUT);
   const swapB = ramp(t, cue(4) + 0.6, cue(4) + 2.2, EASE_IN_OUT);
   const boson = ramp(t, cue(4) - 0.2, cue(4) + 0.6);
-  const slater = ramp(t, cue(5) - 0.2, cue(5) + 0.6);
+  const slater = ramp(t, cue(5) - 0.05, cue(5) + 0.6);
   const same = ramp(t, cue(5) + 1.2, cue(5) + 2.2);
   const strike = ramp(t, cue(6) + 0.6, cue(6) + 1.6);
   const zero = ramp(t, cue(6) + 1.6, cue(6) + 2.4, BACK);
   const boxes = ramp(t, cue(7) + 0.4, cue(7) + 1.2, BACK);
+  const meet = ramp(t, cue(0) + 1.6, cue(0) + 4.4, EASE_IN_OUT);
+  // baris 5–6: dua elektron dipaksa ke spin-orbital yang sama → Ψ = 0, tidak ada keadaan
+  const force = ramp(t, cue(5) + 1.0, cue(5) + 2.4, EASE_IN_OUT);
+  const vanish = ramp(t, cue(6) + 1.8, cue(6) + 2.8);
+  const sameBox = slater * (1 - ramp(t, cue(7) - 0.1, cue(7) + 0.3));
   const arc = (p: number, xa: number, xb: number, y: number, up: number) => ({x: mix(xa, xb, p), y: y - up * Math.sin(Math.PI * p) * 90});
   // Stern–Gerlach
   const OV = {x: 220, y: 560};
@@ -53,12 +59,24 @@ export const Pauli: React.FC = () => {
   return (
     <AbsoluteFill>
       <Stage>
-        {/* identik */}
+        {/* identik: dua elektron berpapasan; setelahnya tak bisa dibedakan mana "1" dan mana "2" */}
         <g opacity={ident}>
-          <Particle x={760} y={560} kind="e" label="1 ?" />
-          <Particle x={1160} y={560} kind="e" label="2 ?" />
-          <Label x={960} y={680} size={30} color={C.muted}>
-            identik: tidak ada label, tidak ada tanda pengenal
+          {[0, 1].map((k) => {
+            const a = Math.PI * k + Math.PI * 3 * meet;
+            const r = mix(220, 70, Math.sin(Math.PI * meet));
+            const x = 960 - r * Math.cos(a);
+            const y = 560 - 0.55 * r * Math.sin(a);
+            return (
+              <g key={k}>
+                <Electron x={x} y={y} r={34} label />
+                <text x={x} y={y - 64} textAnchor="middle" fontFamily={FONT.mono} fontSize={32} fontWeight={600} fill={meet > 0.98 ? C.red : C.gold} opacity={meet > 0.02 && meet < 0.98 ? 0.25 : 1}>
+                  {meet > 0.98 ? '?' : `${k + 1}`}
+                </text>
+              </g>
+            );
+          })}
+          <Label x={960} y={720} size={30} color={C.muted}>
+            {meet > 0.98 ? 'setelah berpapasan: mana yang 1, mana yang 2?' : 'beri label 1 dan 2…'}
           </Label>
         </g>
         {/* spin */}
@@ -153,6 +171,19 @@ export const Pauli: React.FC = () => {
           </g>
           <line x1={960} y1={400} x2={960} y2={760} stroke={C.faint} strokeWidth={2} strokeDasharray="6 8" />
         </g>
+        {/* dipaksa ke spin-orbital yang sama */}
+        <g opacity={sameBox}>
+          <rect x={870} y={590} width={180} height={140} rx={10} fill="rgba(12,18,40,0.85)" stroke={vanish > 0.5 ? C.red : C.violet} strokeWidth={4} strokeDasharray={vanish > 0.5 ? '10 8' : undefined} />
+          <Label x={960} y={565} size={26} color={C.violet} font="serif" italic>
+            spin-orbital χ<tspan baselineShift="sub" fontSize={18}>a</tspan>
+          </Label>
+          {[-1, 1].map((sd) => (
+            <SpinArrow key={sd} x={960 + sd * mix(250, 40, force)} y={660} up len={90} opacity={1 - vanish} />
+          ))}
+          <Label x={960} y={775} size={28} color={C.red} weight={700} opacity={vanish}>
+            Ψ = 0 di mana-mana: bukan keadaan
+          </Label>
+        </g>
         {/* kotak orbital: ↑↓ boleh, ↑↑ tidak */}
         <g opacity={boxes}>
           {[
@@ -171,7 +202,7 @@ export const Pauli: React.FC = () => {
         </g>
       </Stage>
       <Badge x={960} y={250} text="STERN & GERLACH · 1922" color={C.cyan} opacity={sg} />
-      <Formula x={960} y={250} p={win(t, cue(3), cue(5) - 0.1, 0.7, 0.4)} accent={C.red} caption="postulat 6: pertukaran dua fermion identik">
+      <Formula x={960} y={250} p={slot(t, cue(3) + 0.05, cue(5) - 0.05)} accent={C.red} caption="postulat 6: pertukaran dua fermion identik">
         <V>Ψ</V>(1, 2)&nbsp;=&nbsp;−<V>Ψ</V>(2, 1)
       </Formula>
       <Card x={960} y={420} opacity={slater * (1 - boxes)} accent={C.violet} style={{padding: '28px 46px'}}>

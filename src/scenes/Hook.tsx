@@ -9,7 +9,7 @@ import {C, FONT} from '../theme';
 // Pembuka: percobaan interferensi elektron satu per satu (Tonomura dkk., Hitachi, 1989).
 // Kiri: penembak elektron + sekat dua celah. Kanan: layar tempat titik menumpuk.
 export const SCR = {x: 760, y: 210, w: 1000, h: 600};
-const GUN = {x: 190, y: 510};
+const GUN = {x: 230, y: 510};
 const SLIT = {x: 520, y: 510};
 const MAXDOTS = 5200;
 export const HOOK_DOTS = sampleRho('hook', fringe, MAXDOTS, 1);
@@ -106,12 +106,14 @@ export const Hook: React.FC = () => {
         </g>
         <g opacity={curve * (1 - psiOn)}>
           <path d={fpath} fill="none" stroke={C.gold} strokeWidth={5} filter="url(#glow)" />
+          <rect x={SCR.x + SCR.w / 2 - 170} y={SCR.y + 24} width={340} height={54} rx={14} fill="rgba(6,10,24,0.88)" stroke={C.gold} strokeWidth={2} />
           <Label x={SCR.x + SCR.w / 2} y={SCR.y + 50} size={34} color={C.gold} weight={700}>
             pola interferensi
           </Label>
         </g>
         <g opacity={psiOn}>
           <path d={fpath} fill="none" stroke={C.violet} strokeWidth={6} filter="url(#glow)" />
+          <rect x={SCR.x + SCR.w / 2 - 80} y={SCR.y + 20} width={160} height={62} rx={14} fill="rgba(6,10,24,0.9)" stroke={C.violet} strokeWidth={2} />
           <Label x={SCR.x + SCR.w / 2} y={SCR.y + 50} size={40} color={C.violet} weight={700} font="serif" italic>
             |ψ|²
           </Label>

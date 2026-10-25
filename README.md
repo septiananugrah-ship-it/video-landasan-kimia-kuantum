@@ -17,15 +17,36 @@ Mesin video sama dengan repo `video-partikel-kotak` (Modul 3): naskah → timeli
 Daftar bab bertimecode untuk YouTube: `naskah/BAB_YOUTUBE.txt` (diperbarui otomatis setelah narasi direkam).
 Semua angka & sumbernya: `naskah/AUDIT.md`.
 
-## Narasi (ElevenLabs, suara Bagas)
+## Cara menjalankan (render di GitHub Actions)
 
-1. Pastikan secret **`ELEVENLABS_API_KEY`** ada di repo ini (Settings → Secrets and variables → Actions). Secret repo lain tidak ikut terbawa.
-2. Actions → **Buat voice-over ElevenLabs + render 2K** → Run workflow (voice ID bawaan = Bagas, model `eleven_v4`).
-3. Workflow membuat MP3 per baris, menyesuaikan timeline & musik, lalu merender **dua versi**:
-   - `aturan-kuantum-dengan-narasi-2k-30fps` (narasi + musik pelan + subtitle),
-   - `aturan-kuantum-tanpa-narasi-2k-30fps` (musik + subtitle, tanpa suara — untuk dubbing sendiri).
+Semua langkah dijalankan dari tab **Actions** repo ini (bisa dari iPad). Tombol *Run workflow* hanya muncul untuk workflow yang sudah ada di branch `main`.
 
-Render ulang tanpa membuat suara: Actions → **Render Aturan Main Kuantum 2K 30FPS** (isi `props` dan `nama`).
+1. **Merge PR** ke `main` (sekali saja).
+2. **Secret**: pastikan **`ELEVENLABS_API_KEY`** ada di *Settings → Secrets and variables → Actions* repo ini. Secret repo lain tidak ikut terbawa; tanpa secret ini langkah TTS gagal dengan kunci kosong.
+3. Actions → **Buat voice-over ElevenLabs + render 2K** → *Run workflow*. Isian bawaan sudah benar:
+
+   | Isian | Nilai |
+   |---|---|
+   | `voice_id` | `aJiaMo73BheNakP6EPev` (Bagas) |
+   | `model` | `eleven_v4` |
+   | `ulang_semua` | tidak dicentang (hanya baris yang belum punya MP3 yang dibuat) |
+   | `render` | dicentang |
+
+   Workflow membuat MP3 per baris (`public/voiceover/<kode>.mp3`, 150 baris), mengukur durasi & jeda, menyesuaikan timeline, subtitle, musik, dan `naskah/BAB_YOUTUBE.txt`, menyimpannya ke `main`, lalu merender **dua versi** 2K (2560 × 1440, 30 FPS, H.264) secara paralel (12 potongan per versi):
+   - artefak **`aturan-kuantum-dengan-narasi-2k-30fps`** — narasi + musik pelan + subtitle,
+   - artefak **`aturan-kuantum-tanpa-narasi-2k-30fps`** — musik + subtitle tanpa suara (untuk dubbing sendiri).
+
+   Unduh di halaman run → bagian *Artifacts* (iPad: tekan lama → *Unduh Tautan Tertaut*). Artefak tersimpan 14 hari.
+4. (Disarankan) Actions → **Cek pengucapan narasi (Whisper)** → *Run workflow* (model `small`; baris yang ditandai dicek ulang dengan `medium`). Hasil: ringkasan run + artefak `cek-pengucapan-*` (`naskah/CEK_PENGUCAPAN.md`). Kata bertanda sering alarm palsu; untuk merekam ulang satu baris, hapus `public/voiceover/<kode>.mp3` di `main` lalu jalankan lagi langkah 3.
+
+**Render ulang tanpa membuat suara** (mis. setelah memperbaiki animasi): Actions → **Render Aturan Main Kuantum 2K 30FPS** → *Run workflow*:
+
+| Versi | `props` | `nama` |
+|---|---|---|
+| dengan narasi (butuh MP3 dari langkah 3) | `{"showCaptions":true,"musicVolume":0.35,"voiceover":true}` | `dengan-narasi` |
+| tanpa narasi | `{"showCaptions":true,"musicVolume":0.9,"voiceover":false}` | `tanpa-narasi` |
+
+Pilih `resolusi` = `1080p` untuk berkas lebih kecil. Sebelum narasi direkam, timeline memakai estimasi 5,3 suku kata/dtk (±18 menit); setelah narasi direkam, durasinya mengikuti suara.
 
 ## Intro SCIENTIAN
 
@@ -34,7 +55,8 @@ Unggah intro 30 FPS ke `intro/intro.mp4` (lihat `intro/README.md`); render berik
 ## Mengubah naskah
 
 Edit `src/script.ts`, lalu `npm run timeline && npm run music`. Pratinjau: `npm run dev` (folder *Adegan* berisi tiap adegan).
-QA: `node scripts/qa-audit.mjs out/audit` lalu `python3 scripts/contact.py out/audit out/sheets` (lembar kontak per adegan);
+QA (lokal, butuh `CHROME_PATH` ke chrome-headless-shell): `node scripts/qa-audit.mjs out/audit` lalu `python3 scripts/contact.py out/audit out/sheets` (lembar kontak per adegan);
+`node scripts/qa-moments.mjs out/m adegan:baris:offset …` untuk momen tertentu;
 `node --experimental-strip-types scripts/check-cues.ts` memeriksa penanda kata `wordOf`.
 Adegan baru: tambahkan ke daftar di `scripts/gen-scenes.py` lalu jalankan skrip itu (menulis `src/scenes/index.ts`).
 

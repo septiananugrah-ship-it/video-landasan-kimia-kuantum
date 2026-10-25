@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, ramp, win} from '../anim';
+import {BACK, ramp, slot} from '../anim';
 import {Badge, Formula, Frac, Hbar, Label, Op, Stage, Sub, Sup, V} from '../components/primitives';
 import {Cx, PhaseWave, Phasor, cadd, cexp, cscale, phaseColor} from '../components/qm';
 import {ncol, psi} from '../components/viz';
@@ -17,7 +17,8 @@ export const Stationary: React.FC = () => {
   const {t, cue} = useScene();
   const part1 = ramp(t, cue(0) + 0.3, cue(0) + 1.3) * (1 - ramp(t, cue(5) - 0.5, cue(5)));
   const ladder = ramp(t, cue(2) - 0.2, cue(2) + 0.8);
-  const clock = ramp(t, cue(3) - 0.2, cue(3) + 0.6);
+  // jam fase e^(−iEt/ħ) sudah tampil sejak rumus pemisahan variabel (baris 0)
+  const clock = ramp(t, cue(0) + 1.0, cue(0) + 1.8);
   const dens = ramp(t, cue(4) - 0.2, cue(4) + 0.8);
   const part2 = ramp(t, cue(5) + 0.1, cue(5) + 1.0);
   const slosh = ramp(t, cue(6) - 0.2, cue(6) + 0.8);
@@ -62,9 +63,12 @@ export const Stationary: React.FC = () => {
             </Label>
           </g>
           <g opacity={clock}>
-            <Phasor x={980} y={430} r={70} phi={ph1} />
-            <Label x={980} y={540} size={26} color={C.muted}>
-              e<tspan baselineShift="super" fontSize={18}>−iEt/ħ</tspan>: panjang tetap, sudut berputar
+            <Phasor x={1040} y={440} r={70} phi={ph1} />
+            <Label x={1040} y={545} size={26} color={C.muted}>
+              faktor fase: panjang tetap
+            </Label>
+            <Label x={1040} y={580} size={26} color={C.muted}>
+              sudut berputar searah jarum jam
             </Label>
           </g>
           {/* tangga energi */}
@@ -123,18 +127,18 @@ export const Stationary: React.FC = () => {
               filter="url(#glow)"
             />
             <Label x={1500} y={720} size={26} color={C.amber} weight={700}>
-              cahaya, ν = (E₂ − E₁)/h
+              cahaya berfrekuensi ν
             </Label>
           </g>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(0) + 0.3, cue(1) - 0.1, 0.7, 0.4)} accent={C.gold} caption="pemisahan variabel (V tak bergantung waktu)">
+      <Formula x={960} y={250} p={slot(t, cue(0) + 0.3, cue(1) - 0.05)} accent={C.gold} caption="pemisahan variabel (V tak bergantung waktu)">
         <V>Ψ</V>(<V>x</V>,<V>t</V>)&nbsp;=&nbsp;<V>ψ</V>(<V>x</V>)&thinsp;<V>e</V>
         <Sup>
           −<V>iEt</V>/<Hbar />
         </Sup>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(1), cue(3) - 0.1, 0.7, 0.4)} accent={C.mint} caption="persamaan Schrödinger tidak bergantung waktu">
+      <Formula x={960} y={250} p={slot(t, cue(1) - 0.05, cue(3) - 0.05)} accent={C.mint} caption="persamaan Schrödinger tidak bergantung waktu">
         <Op>H</Op>
         <V>ψ</V>
         <Sub>n</Sub>&nbsp;=&nbsp;<V>E</V>
@@ -142,8 +146,8 @@ export const Stationary: React.FC = () => {
         <V>ψ</V>
         <Sub>n</Sub>
       </Formula>
-      <Badge x={960} y={250} text="STASIONER: |Ψ|² TIDAK BERUBAH" color={C.cyan} opacity={win(t, cue(4), cue(5) - 0.3, 0.5, 0.4)} />
-      <Formula x={960} y={250} p={win(t, cue(6), 9999, 0.7, 0.4)} accent={C.amber} caption="frekuensi ayunan = frekuensi cahaya yang diserap/dipancarkan">
+      <Badge x={960} y={250} text="STASIONER: |Ψ|² TIDAK BERUBAH" color={C.cyan} opacity={slot(t, cue(4), cue(5) - 0.2, 0.5)} />
+      <Formula x={960} y={250} p={slot(t, cue(6), 9999)} accent={C.amber} caption="frekuensi ayunan = frekuensi cahaya yang diserap/dipancarkan">
         <V>ν</V>&nbsp;=&nbsp;
         <Frac n={<><V>E</V><Sub>2</Sub> − <V>E</V><Sub>1</Sub></>} d={<V>h</V>} />
       </Formula>

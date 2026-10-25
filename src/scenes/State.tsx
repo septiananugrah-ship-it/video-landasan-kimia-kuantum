@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, rand, ramp, win} from '../anim';
+import {BACK, rand, ramp, slot, win} from '../anim';
 import {Badge, Formula, Label, Stage, Sup, V} from '../components/primitives';
 import {Cx, PhaseWave, PhaseWheel, Phasor, sampleRho} from '../components/qm';
 import {useScene} from '../SceneContext';
@@ -31,6 +31,8 @@ export const State: React.FC = () => {
   const box = {x: AX.x, y: AX.y, w: AX.w, sy: AX.sy};
   const dpath = Array.from({length: 301}, (_, k) => `${k ? 'L' : 'M'}${(AX.x + (k / 300) * AX.w).toFixed(1)},${(AX.y - rho(k / 300) * AX.sy).toFixed(1)}`).join(' ');
   const xs = 0.5;
+  // satu slot kartu di atas: batas antar-kartu (kartu lama hilang dulu, baru kartu berikutnya)
+  const S = [cue(0) + 0.2, cue(3) - 0.1, cue(4) - 0.05, cue(6) - 0.05, cue(8) - 0.05];
   return (
     <AbsoluteFill>
       <Stage>
@@ -47,10 +49,11 @@ export const State: React.FC = () => {
           {Array.from({length: 25}, (_, k) => {
             const u = 0.08 + (k / 24) * 0.84;
             const z = psiAt(u, t);
-            const r = Math.hypot(z[0], z[1]) * 105;
-            return r > 4 ? <Phasor key={k} x={AX.x + u * AX.w} y={AX.y + 120} r={r} phi={Math.atan2(z[1], z[0])} ring={false} width={4} /> : <circle key={k} cx={AX.x + u * AX.w} cy={AX.y + 120} r={4} fill={C.ink} />;
+            // panjang panah ≤ 50 px agar panah tetangga (jarak ≈ 53 px) tidak saling tumpang tindih
+            const r = Math.hypot(z[0], z[1]) * 50;
+            return r > 4 ? <Phasor key={k} x={AX.x + u * AX.w} y={AX.y + 110} r={r} phi={Math.atan2(z[1], z[0])} ring={false} width={4} /> : <circle key={k} cx={AX.x + u * AX.w} cy={AX.y + 110} r={4} fill={C.ink} />;
           })}
-          <Label x={AX.x + AX.w} y={AX.y + 205} size={24} color={C.ink} anchor="end">
+          <Label x={AX.x + AX.w} y={AX.y + 190} size={24} color={C.ink} anchor="end">
             panjang = |ψ| · arah = fase
           </Label>
         </g>
@@ -95,20 +98,20 @@ export const State: React.FC = () => {
         </g>
         <PhaseWheel x={1730} y={250} opacity={waveOn * (1 - dens)} />
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(0) + 0.2, cue(3) - 0.1, 0.7, 0.4) * ramp(t, cue(0), cue(0) + 0.7, BACK)} accent={C.gold} caption="postulat 1: seluruh informasi tentang keadaan">
+      <Formula x={960} y={250} p={slot(t, S[0], S[1]) * ramp(t, cue(0), cue(0) + 0.7, BACK)} accent={C.gold} caption="postulat 1: seluruh informasi tentang keadaan">
         <V>Ψ</V>(<V>x</V>, <V>t</V>)&nbsp;∈&nbsp;bilangan kompleks
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(4), cue(6) - 0.1, 0.7, 0.4)} accent={C.violet} caption="rapat peluang (tafsiran Born)">
+      <Formula x={960} y={250} p={slot(t, S[2], S[3])} accent={C.violet} caption="rapat peluang (tafsiran Born)">
         <V>ρ</V>&nbsp;=&nbsp;<V>Ψ</V>
         <Sup>*</Sup>
         <V>Ψ</V>&nbsp;=&nbsp;|<V>Ψ</V>|<Sup>2</Sup>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(6), cue(8) - 0.1, 0.7, 0.4)} accent={C.gold} caption="peluang menemukan partikel antara x dan x + dx">
+      <Formula x={960} y={250} p={slot(t, S[3], S[4])} accent={C.gold} caption="peluang menemukan partikel antara x dan x + dx">
         <V>dP</V>&nbsp;=&nbsp;|<V>Ψ</V>(<V>x</V>,<V>t</V>)|<Sup>2</Sup>&thinsp;<V>dx</V>
       </Formula>
       <Badge x={1560} y={250} text="MAX BORN · 1926" color={C.violet} opacity={win(t, cue(5) - 0.2, cue(6) - 0.1, 0.5, 0.4)} />
-      <Badge x={960} y={250} text="ψ SENDIRI TIDAK TERUKUR" color={C.red} opacity={win(t, cue(3) - 0.1, cue(4) - 0.1, 0.4, 0.4)} />
-      {dotsN > 0 ? <Badge x={960} y={250} text="TITIK-TITIK MENGIKUTI |ψ|²" color={C.cyan} opacity={ramp(t, cue(8) + 0.2, cue(8) + 0.8)} /> : null}
+      <Badge x={960} y={250} text="ψ SENDIRI TIDAK TERUKUR" color={C.red} opacity={slot(t, S[1], S[2], 0.4)} />
+      {dotsN > 0 ? <Badge x={960} y={250} text="TITIK-TITIK MENGIKUTI |ψ|²" color={C.cyan} opacity={ramp(t, S[4], S[4] + 0.6)} /> : null}
     </AbsoluteFill>
   );
 };

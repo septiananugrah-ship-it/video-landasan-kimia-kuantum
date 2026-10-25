@@ -1,7 +1,8 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, ramp, slot, win} from '../anim';
 import {Badge, Formula, Frac, Label, Stage, Sub, V} from '../components/primitives';
+import {Electron} from '../components/viz';
 import {useScene} from '../SceneContext';
 import {C, FONT} from '../theme';
 
@@ -27,7 +28,11 @@ export const MRI: React.FC = () => {
   const spec = win(t, cue(4) + 0.1, cue(5) - 0.1, 0.8, 0.5);
   const scan = ramp(t, cue(5) + 0.1, cue(5) + 1.0);
   const mriPt = ramp(t, wordOf(5, 'enam') - 0.2, wordOf(5, 'enam') + 0.5, BACK);
-  const img = ramp(t, cue(6) + 0.2, cue(6) + 2.0, EASE_IN_OUT);
+  const img = ramp(t, cue(6) + 0.2, cue(6) + 3.2, EASE_IN_OUT);
+  // baris 5: spin proton di dalam lubang magnet berpresesi; baris 6: gambar irisan tersusun baris demi baris
+  const spins = ramp(t, cue(5) + 0.6, cue(5) + 1.6) * (1 - ramp(t, cue(6) + 0.2, cue(6) + 1.2));
+  const rf = ramp(t, wordOf(5, 'enam') - 0.2, wordOf(5, 'enam') + 2.5);
+  const elec = win(t, cue(0) + 0.2, cue(1) - 0.3, 0.6, 0.5);
   const a = t * 3;
   const PX = 420;
   const PY = 560;
@@ -35,7 +40,8 @@ export const MRI: React.FC = () => {
   const tipY = PY - 110 + 18 * Math.sin(a) * field;
   const spath = Array.from({length: 401}, (_, k) => {
     const d = 4.5 - (k / 400) * 4;
-    const y = peak(d, 1.22, 3) * 0.9 + peak(d, 3.69, 4) * 0.6 + peak(d, 2.6, 1) * 0.55;
+    // luas puncak sebanding jumlah H: CH₃ (3) : CH₂ (2) : OH (1); jumlah koefisien triplet 4, kuartet 8
+    const y = peak(d, 1.22, 3) * (3 / 4) + peak(d, 3.69, 4) * (2 / 8) + peak(d, 2.6, 1) * 1;
     return `${k ? 'L' : 'M'}${(360 + (k / 400) * 1200).toFixed(1)},${(760 - y * 200).toFixed(1)}`;
   }).join(' ');
   const dx = (d: number) => 360 + ((4.5 - d) / 4) * 1200;
@@ -52,6 +58,14 @@ export const MRI: React.FC = () => {
               B
             </Label>
             <ellipse cx={PX} cy={PY - 110} rx={60} ry={18} fill="none" stroke={C.gold} strokeWidth={2} strokeDasharray="5 5" />
+          </g>
+          {/* baris 0: elektron punya spin ½ — proton juga */}
+          <g opacity={elec}>
+            <Electron x={PX + 330} y={PY} r={30} label />
+            <line x1={PX + 330} y1={PY + 50} x2={PX + 330} y2={PY - 70} stroke={C.gold} strokeWidth={6} strokeLinecap="round" markerEnd="url(#arrow-gold)" />
+            <Label x={PX + 330} y={PY + 100} size={26} color={C.muted}>
+              spin ½ (elektron)
+            </Label>
           </g>
           <circle cx={PX} cy={PY} r={60} fill="url(#soft-red)" opacity={0.6} />
           <circle cx={PX} cy={PY} r={34} fill={C.red} />
@@ -115,14 +129,14 @@ export const MRI: React.FC = () => {
             pergeseran kimia δ (ppm) · CH₃CH₂OH, skematis
           </Label>
           <path d={spath} fill="none" stroke={C.mint} strokeWidth={4} filter="url(#glow)" />
-          <Label x={dx(3.69)} y={520} size={28} color={C.amber} weight={700}>
-            CH₂
+          <Label x={dx(3.69)} y={570} size={28} color={C.amber} weight={700}>
+            CH₂ (2H)
           </Label>
-          <Label x={dx(2.6)} y={600} size={28} color={C.cyan} weight={700}>
-            OH
+          <Label x={dx(2.6)} y={520} size={28} color={C.cyan} weight={700}>
+            OH (1H)
           </Label>
-          <Label x={dx(1.22)} y={470} size={28} color={C.violet} weight={700}>
-            CH₃
+          <Label x={dx(1.22)} y={420} size={28} color={C.violet} weight={700}>
+            CH₃ (3H)
           </Label>
         </g>
         {/* MRI */}
@@ -131,7 +145,39 @@ export const MRI: React.FC = () => {
           <circle cx={600} cy={560} r={230} fill="none" stroke={C.cyan} strokeWidth={3} opacity={0.6} />
           <circle cx={600} cy={560} r={160} fill="rgba(5,8,18,0.9)" />
           {/* irisan kepala skematis */}
-          <g opacity={img}>
+          {/* spin proton di dalam lubang magnet, berpresesi pada ≈ 64 MHz (diperlambat) */}
+          <g opacity={spins}>
+            {Array.from({length: 16}, (_, k) => {
+              const gx = 600 + ((k % 4) - 1.5) * 70;
+              const gy = 560 + (Math.floor(k / 4) - 1.5) * 70;
+              const a = t * 3 + k * 0.7;
+              const tilt = 0.25 + 0.75 * rf;
+              return (
+                <g key={k}>
+                  <circle cx={gx} cy={gy + 14} r={8} fill={C.red} />
+                  <line x1={gx} y1={gy + 14} x2={gx + 18 * tilt * Math.cos(a)} y2={gy - 18 + 6 * tilt * Math.sin(a)} stroke={C.gold} strokeWidth={4} strokeLinecap="round" />
+                </g>
+              );
+            })}
+          </g>
+          {/* pulsa gelombang radio ≈ 64 MHz masuk ke lubang magnet */}
+          <g opacity={rf * (1 - img)}>
+            <path
+              d={Array.from({length: 81}, (_, j) => `${j ? 'L' : 'M'}${(860 + j * 2).toFixed(1)},${(560 - 18 * Math.sin(j * 0.5 + t * 12)).toFixed(1)}`).join(' ')}
+              fill="none"
+              stroke={C.cyan}
+              strokeWidth={4}
+            />
+            <Label x={940} y={510} size={24} color={C.cyan}>
+              radio ≈ 64 MHz
+            </Label>
+          </g>
+          <defs>
+            <clipPath id="mri-scan">
+              <rect x={440} y={400} width={320} height={320 * img} />
+            </clipPath>
+          </defs>
+          <g opacity={img > 0 ? 1 : 0} clipPath="url(#mri-scan)">
             <ellipse cx={600} cy={560} rx={110} ry={135} fill="#cfd6e6" opacity={0.85} />
             <ellipse cx={600} cy={560} rx={95} ry={118} fill="#8c96b0" />
             <path d="M600,445 L600,675" stroke="#5a6480" strokeWidth={4} />
@@ -140,31 +186,32 @@ export const MRI: React.FC = () => {
             ))}
             <ellipse cx={600} cy={560} rx={14} ry={30} fill="#2a2f40" />
           </g>
+          {img > 0 && img < 1 ? <line x1={460} y1={400 + 320 * img} x2={740} y2={400 + 320 * img} stroke={C.cyan} strokeWidth={3} /> : null}
           <Label x={600} y={830} size={24} color={C.muted}>
             ilustrasi skematis
           </Label>
           <g opacity={mriPt}>
-            <rect x={1020} y={430} width={620} height={240} rx={24} fill="rgba(12,18,40,0.85)" stroke={C.cyan} strokeWidth={2} />
+            <rect x={1020} y={430} width={620} height={110 + 130 * ramp(t, cue(6) - 0.2, cue(6) + 0.4)} rx={24} fill="rgba(12,18,40,0.85)" stroke={C.cyan} strokeWidth={2} />
             <text x={1330} y={500} textAnchor="middle" fontFamily={FONT.mono} fontSize={36} fontWeight={600} fill={C.cyan}>
               1,5 T → ≈ 64 MHz
             </text>
-            <text x={1330} y={560} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.ink} opacity={img}>
+            <text x={1330} y={560} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.ink} opacity={ramp(t, cue(6) + 0.2, cue(6) + 0.8)}>
               sinyal dari proton air &amp; lemak
             </text>
-            <text x={1330} y={610} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.mint} fontWeight={700} opacity={img}>
+            <text x={1330} y={610} textAnchor="middle" fontFamily={FONT.sans} fontSize={28} fill={C.mint} fontWeight={700} opacity={ramp(t, wordOf(6, 'tanpa') - 0.2, wordOf(6, 'tanpa') + 0.4)}>
               tanpa sinar-X
             </text>
           </g>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(2), cue(4) - 0.1, 0.7, 0.4)} accent={C.gold} caption="frekuensi resonansi proton: γ/2π ≈ 42,58 MHz per tesla">
+      <Formula x={960} y={250} p={slot(t, cue(2), cue(4) - 0.05)} accent={C.gold} caption="frekuensi resonansi proton: γ/2π ≈ 42,58 MHz per tesla">
         <V>ν</V>&nbsp;=&nbsp;
         <Frac n={<V>γ</V>} d={<>2<V>π</V></>} />
         <V>B</V>
         <Sub>0</Sub>
       </Formula>
-      <Badge x={960} y={250} text="NMR: LINGKUNGAN KIMIA MENGGESER ν" color={C.mint} opacity={win(t, cue(4) + 0.2, cue(5) - 0.1, 0.5, 0.4)} />
-      <Badge x={960} y={250} text="MRI: PRINSIP SAMA DI RUMAH SAKIT" color={C.cyan} opacity={ramp(t, cue(5), cue(5) + 0.6, BACK)} />
+      <Badge x={960} y={250} text="NMR: LINGKUNGAN KIMIA MENGGESER ν" color={C.mint} opacity={slot(t, cue(4) + 0.2, cue(5) - 0.05, 0.5)} />
+      <Badge x={960} y={250} text="MRI: PRINSIP SAMA DI RUMAH SAKIT" color={C.cyan} opacity={ramp(t, cue(5) - 0.05, cue(5) + 0.55, BACK)} />
     </AbsoluteFill>
   );
 };

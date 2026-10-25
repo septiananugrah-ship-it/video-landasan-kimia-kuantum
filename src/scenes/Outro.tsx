@@ -19,6 +19,7 @@ const REFS = [
   'The Nobel Prize in Chemistry 1998 (W. Kohn, J. A. Pople) — nobelprize.org',
   'The Nobel Prize in Physics 2025 (J. Clarke, M. H. Devoret, J. M. Martinis) — nobelprize.org',
   'MIT OCW 5.73 (2005) — partikel identik & determinan Slater',
+  'M. Reiher dkk., PNAS 114, 7555 (2017) — klaster besi–belerang (FeMoco) sebagai target simulasi kuantum',
 ];
 
 export const Outro: React.FC = () => {
@@ -43,12 +44,12 @@ export const Outro: React.FC = () => {
           <div style={{fontFamily: FONT.mono, fontSize: 20, letterSpacing: 4, color: C.muted, marginBottom: 14}}>RUJUKAN</div>
           <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 56, rowGap: 6, width: 1720, textAlign: 'left'}}>
             {REFS.map((r, i) => (
-              <div key={r} style={{fontFamily: FONT.sans, fontSize: 21, color: C.muted, lineHeight: 1.45, opacity: ramp(t, 2.4 + i * 0.08, 3.2 + i * 0.08)}}>
+              <div key={r} style={{fontFamily: FONT.sans, fontSize: 22, color: C.muted, lineHeight: 1.4, opacity: ramp(t, 2.4 + i * 0.08, 3.2 + i * 0.08)}}>
                 {r}
               </div>
             ))}
           </div>
-          <div style={{marginTop: 22, fontFamily: FONT.sans, fontSize: 20, color: C.faint}}>
+          <div style={{marginTop: 20, fontFamily: FONT.sans, fontSize: 22, color: C.muted, opacity: 0.8}}>
             Contoh angka mengikuti Modul 2 · paket gelombang: solusi analitik persamaan Schrödinger partikel bebas · nilai ukur ditandai “≈” · ilustrasi alat &amp; molekul skematis
           </div>
         </div>

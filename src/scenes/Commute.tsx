@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, ramp, slot} from '../anim';
 import {Badge, Card, Formula, Frac, Hbar, Label, Op, Stage, Sub, Sup, V} from '../components/primitives';
 import {useScene} from '../SceneContext';
 import {C, FONT} from '../theme';
@@ -36,8 +36,8 @@ export const Commute: React.FC = () => {
   const {t, cue} = useScene();
   const blocks = ramp(t, cue(0) + 0.3, cue(0) + 1.0) * (1 - ramp(t, cue(2) - 0.4, cue(2)));
   const swap = ramp(t, cue(0) + 2.4, cue(0) + 3.6, EASE_IN_OUT);
-  const der = ramp(t, cue(2) - 0.2, cue(2) + 0.6) * (1 - ramp(t, cue(5) - 0.4, cue(5)));
-  const l1 = ramp(t, cue(2) + 0.6, cue(2) + 1.3);
+  const der = ramp(t, cue(2) - 0.2, cue(2) + 0.4) * (1 - ramp(t, cue(5) - 0.4, cue(5)));
+  const l1 = ramp(t, cue(2) - 0.1, cue(2) + 0.6);
   const l2 = ramp(t, cue(2) + 2.4, cue(2) + 3.1);
   const strike = ramp(t, cue(3) + 0.3, cue(3) + 1.2);
   const l3 = ramp(t, cue(3) + 1.6, cue(3) + 2.4, BACK);
@@ -66,9 +66,9 @@ export const Commute: React.FC = () => {
   };
   // kerucut L: |L| = √(l(l+1)) ħ, L_z = m ħ (l = 1, m = 1)
   const CX = 960;
-  const CY = 640;
-  const Lz = 150;
-  const Lr = 150;
+  const CY = 690;
+  const Lz = 190;
+  const Lr = 190;
   const tipX = CX + Lr * Math.cos(ang);
   const tipY = CY - Lz - 0.32 * Lr * Math.sin(ang);
   return (
@@ -83,17 +83,10 @@ export const Commute: React.FC = () => {
           <Label x={box2.x + box2.w / 2} y={box2.y + 64} size={28} color={C.violet} weight={600}>
             {`momentum: Δp`}
           </Label>
-          <rect x={960 - 170} y={410} width={340} height={64} rx={14} fill="rgba(12,18,40,0.9)" stroke={C.gold} strokeWidth={2} />
-          <text x={960} y={442} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.mono} fontSize={28} fontWeight={600} fill={C.gold}>
-            Δx · Δp = ħ/2
-          </text>
-          <Label x={960} y={500} size={22} color={C.muted}>
-            (paket Gauss: nilai minimum)
-          </Label>
         </g>
         <g opacity={cone}>
-          <line x1={CX} y1={CY + 120} x2={CX} y2={CY - 290} stroke={C.muted} strokeWidth={2} markerEnd="url(#arrow-muted)" />
-          <Label x={CX + 26} y={CY - 290} size={28} color={C.muted} font="serif" italic anchor="start">
+          <line x1={CX} y1={CY + 90} x2={CX} y2={CY - 300} stroke={C.muted} strokeWidth={2} markerEnd="url(#arrow-muted)" />
+          <Label x={CX + 26} y={CY - 300} size={28} color={C.muted} font="serif" italic anchor="start">
             z
           </Label>
           <ellipse cx={CX} cy={CY - Lz} rx={Lr} ry={0.32 * Lr} fill="none" stroke={C.violet} strokeWidth={2} strokeDasharray="7 7" opacity={0.7} />
@@ -107,7 +100,7 @@ export const Commute: React.FC = () => {
           <Label x={CX + Lr + 30} y={CY - Lz} size={28} color={C.gold} anchor="start" weight={700}>
             |L| pasti
           </Label>
-          <Label x={CX} y={CY + 160} size={26} color={C.muted}>
+          <Label x={CX} y={CY + 135} size={26} color={C.muted}>
             L<tspan baselineShift="sub" fontSize={18}>x</tspan> dan L<tspan baselineShift="sub" fontSize={18}>y</tspan> tidak pasti: vektor bisa di mana saja pada kerucut
           </Label>
         </g>
@@ -123,7 +116,7 @@ export const Commute: React.FC = () => {
       </div>
       {/* penurunan [x̂, p̂] */}
       <Card x={960} y={520} opacity={der} accent={C.gold} style={{padding: '30px 50px'}}>
-        <div style={{fontFamily: FONT.serif, fontSize: 52, lineHeight: 1.6, whiteSpace: 'nowrap'}}>
+        <div style={{fontFamily: FONT.serif, fontSize: 58, lineHeight: 1.55, whiteSpace: 'nowrap'}}>
           <div style={{opacity: l1}}>
             <Op>x</Op>
             <Op>p</Op>
@@ -156,18 +149,26 @@ export const Commute: React.FC = () => {
           </div>
         </div>
       </Card>
-      <Formula x={960} y={250} p={win(t, cue(1), cue(2) - 0.1, 0.7, 0.4)} accent={C.cyan} caption="komutator: urutan operator penting">
+      {/* hasil kali ketidakpastian paket Gauss: tetap pada nilai minimum */}
+      <Card x={960} y={455} opacity={plots} accent={C.gold} style={{padding: '12px 30px'}}>
+        <div style={{fontFamily: FONT.serif, fontSize: 40, color: C.gold, textAlign: 'center', whiteSpace: 'nowrap'}}>
+          Δ<V>x</V>&thinsp;·&thinsp;Δ<V>p</V>&nbsp;=&nbsp;
+          <Frac n={<Hbar />} d="2" size={0.8} />
+        </div>
+        <div style={{fontFamily: FONT.sans, fontSize: 22, color: C.muted, textAlign: 'center'}}>paket Gauss: nilai minimum</div>
+      </Card>
+      <Formula x={960} y={250} p={slot(t, cue(1), cue(2) - 0.05)} accent={C.cyan} caption="komutator: urutan operator penting">
         [<Op>A</Op>, <Op>B</Op>]&nbsp;=&nbsp;<Op>A</Op>
         <Op>B</Op>&nbsp;−&nbsp;<Op>B</Op>
         <Op>A</Op>
       </Formula>
-      <Badge x={960} y={250} text="KOMUTATOR ≠ 0 → TIDAK BISA SAMA-SAMA PASTI" color={C.red} opacity={win(t, cue(4), cue(5) - 0.1, 0.5, 0.4)} />
-      <Formula x={960} y={250} p={win(t, cue(5), cue(7) - 0.1, 0.7, 0.4)} accent={C.gold} caption="prinsip ketidakpastian Heisenberg">
+      <Badge x={960} y={250} text="KOMUTATOR ≠ 0 → TIDAK BISA SAMA-SAMA PASTI" color={C.red} opacity={slot(t, cue(4), cue(5) - 0.05, 0.5)} />
+      <Formula x={960} y={250} p={slot(t, cue(5) - 0.05, cue(7) - 0.05)} accent={C.gold} caption="prinsip ketidakpastian Heisenberg">
         Δ<V>x</V>&thinsp;Δ<V>p</V>
         <Sub>x</Sub>&nbsp;≥&nbsp;
         <Frac n={<Hbar />} d="2" />
       </Formula>
-      <Formula x={960} y={250} p={ramp(t, cue(7) + 0.3, cue(7) + 1.0)} accent={C.mint} caption="operator yang komut: nilai pasti bersamaan">
+      <Formula x={960} y={250} p={ramp(t, cue(7) - 0.05, cue(7) + 0.5)} accent={C.mint} caption="operator yang komut: nilai pasti bersamaan">
         [<Op>L</Op>
         <Sup>2</Sup>, <Op>L</Op>
         <Sub>z</Sub>]&nbsp;=&nbsp;0

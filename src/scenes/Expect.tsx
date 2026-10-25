@@ -1,9 +1,9 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, rand, ramp, slot, win} from '../anim';
 import {Badge, Formula, Frac, Label, Op, Stage, Sqrt, Sup, V} from '../components/primitives';
 import {useScene} from '../SceneContext';
-import {C} from '../theme';
+import {C, FONT} from '../theme';
 
 // Bab 7: nilai harapan sebagai titik seimbang histogram (1 eV: 1/4, 4 eV: 3/4 → 3,25 eV),
 // ketidakpastian ±1,30 eV, lalu ⟨p⟩ = 0 untuk partikel yang bergerak bolak-balik.
@@ -13,6 +13,14 @@ const MAXH = 330;
 const MEAN = 3.25;
 const SD = Math.sqrt(0.25 * 1 + 0.75 * 16 - MEAN * MEAN); // 1,299
 
+// baris 0–1: 40 hasil ukur (1 eV atau 4 eV, tepat 10 : 30) muncul satu per satu; rata-ratanya berjalan
+const N_TOK = 40;
+const TOKENS = (() => {
+  const order = Array.from({length: N_TOK}, (_, k) => k).sort((a, b) => rand(a * 7.31 + 0.2) - rand(b * 7.31 + 0.2));
+  const four = new Set(order.slice(0, 30));
+  return Array.from({length: N_TOK}, (_, k) => (four.has(k) ? 4 : 1));
+})();
+
 export const Expect: React.FC = () => {
   const {t, cue, wordOf} = useScene();
   const chart = ramp(t, cue(2) - 0.4, cue(2) + 0.6) * (1 - ramp(t, cue(7) - 0.4, cue(7) + 0.3));
@@ -21,18 +29,56 @@ export const Expect: React.FC = () => {
   const bal = ramp(t, cue(3) - 0.2, cue(3) + 1.6, EASE_IN_OUT);
   const fx = ex(mix(2.5, MEAN, bal));
   // papan jungkat-jungkit: miring sebelum fulkrum pindah ke titik seimbang
-  const tilt = mix(-6, 0, bal);
+  // sisi 3/4 (kanan) lebih berat → papan miring ke kanan (searah jarum jam) sebelum fulkrum pindah
+  const tilt = mix(6, 0, bal);
   const never = win(t, cue(4), cue(5) - 0.1, 0.5, 0.4);
   const drop = Math.floor(Math.max(0, t - cue(4) - 0.3) / 0.7);
   const dropE = drop % 3 === 1 ? 1 : 4;
   const dropP = ((Math.max(0, t - cue(4) - 0.3) % 0.7) / 0.7);
   const sd = ramp(t, cue(6) - 0.2, cue(6) + 1.0, EASE_IN_OUT);
   const box = ramp(t, cue(7) + 0.2, cue(7) + 1.0);
+  const tape = slot(t, cue(0) + 0.5, cue(2) - 0.4, 0.6, 0.45);
+  const nTok = Math.min(N_TOK, Math.floor(Math.max(0, t - cue(0) - 0.9) / ((cue(2) - 1.4 - cue(0) - 0.9) / N_TOK)));
+  const runMean = nTok ? TOKENS.slice(0, nTok).reduce((a, b) => a + b, 0) / nTok : 0;
   const bx = 0.5 + 0.42 * Math.sin((t - cue(7)) * 2.2);
   const dir = Math.cos((t - cue(7)) * 2.2) > 0 ? 1 : -1;
   return (
     <AbsoluteFill>
       <Stage>
+        {/* banyak pengukuran → rata-rata berjalan */}
+        <g opacity={tape}>
+          <Label x={960} y={420} size={28} color={C.muted}>
+            {`hasil ukur energi satu per satu (eV) · ${nTok} pengukuran`}
+          </Label>
+          {TOKENS.slice(0, nTok).map((v, k) => {
+            const x = 368 + (k % 20) * 62;
+            const y = 490 + Math.floor(k / 20) * 70;
+            const fresh = k === nTok - 1 && nTok < N_TOK ? 1 : 0;
+            return (
+              <g key={k}>
+                <rect x={x - 26} y={y - 26} width={52} height={52} rx={10} fill={v === 4 ? 'rgba(160,131,255,0.25)' : 'rgba(79,214,255,0.25)'} stroke={v === 4 ? C.violet : C.cyan} strokeWidth={2 + 2 * fresh} />
+                <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.mono} fontSize={28} fontWeight={600} fill={v === 4 ? C.violet : C.cyan}>
+                  {v}
+                </text>
+              </g>
+            );
+          })}
+          {/* garis bilangan rata-rata berjalan */}
+          <line x1={ex(0)} y1={720} x2={ex(5)} y2={720} stroke={C.muted} strokeWidth={2} />
+          {[0, 1, 2, 3, 4, 5].map((e) => (
+            <Label key={e} x={ex(e)} y={750} size={22} color={C.muted} font="mono">
+              {`${e}`}
+            </Label>
+          ))}
+          {nTok > 0 ? (
+            <g>
+              <path d={`M${ex(runMean)},${716} l-16,-28 l32,0 Z`} fill={C.gold} />
+              <Label x={ex(runMean)} y={660} size={28} color={C.gold} weight={700} font="mono">
+                {`rata-rata ≈ ${runMean.toFixed(2).replace('.', ',')}`}
+              </Label>
+            </g>
+          ) : null}
+        </g>
         <g opacity={chart}>
           <line x1={AX.x0 - 30} y1={AX.y} x2={AX.x1 + 40} y2={AX.y} stroke={C.muted} strokeWidth={3} markerEnd="url(#arrow-muted)" />
           {[0, 1, 2, 3, 4, 5].map((e) => (
@@ -116,30 +162,30 @@ export const Expect: React.FC = () => {
           </Label>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(0) + 0.3, cue(2) - 0.1, 0.7, 0.4)} accent={C.gold} caption="postulat 4: nilai harapan (ψ ternormalisasi)">
+      <Formula x={960} y={250} p={slot(t, cue(0) + 0.3, cue(2) - 0.05)} accent={C.gold} caption="postulat 4: nilai harapan (ψ ternormalisasi)">
         ⟨<V>A</V>⟩&nbsp;=&nbsp;<span style={{fontSize: '1.2em'}}>∫</span>&thinsp;<V>Ψ</V>
         <Sup>*</Sup>&thinsp;<Op>A</Op>&thinsp;<V>Ψ</V>&thinsp;<V>dτ</V>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(3), cue(5) - 0.1, 0.7, 0.4)} accent={C.gold} caption="rata-rata berbobot peluang">
+      <Formula x={960} y={250} p={slot(t, cue(3), cue(5) - 0.05)} accent={C.gold} caption="rata-rata berbobot peluang">
         ⟨<V>E</V>⟩&nbsp;=&nbsp;
         <Frac n="1" d="4" />
         (1)&nbsp;+&nbsp;
         <Frac n="3" d="4" />
         (4)&nbsp;=&nbsp;3,25 eV
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(5), cue(6) - 0.1, 0.7, 0.4)} accent={C.gold} caption="ketidakpastian (simpangan baku)">
+      <Formula x={960} y={250} p={slot(t, cue(5) - 0.05, cue(6) - 0.05)} accent={C.gold} caption="ketidakpastian (simpangan baku)">
         Δ<V>A</V>&nbsp;=&nbsp;
         <Sqrt>
           ⟨<V>A</V>
           <Sup>2</Sup>⟩&nbsp;−&nbsp;⟨<V>A</V>⟩<Sup>2</Sup>
         </Sqrt>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(6), cue(7) - 0.1, 0.7, 0.4)} accent={C.gold} caption="⟨E²⟩ = ¼·1 + ¾·16 = 12,25 eV²">
+      <Formula x={960} y={250} p={slot(t, cue(6) - 0.05, cue(7) - 0.05)} accent={C.gold} caption="⟨E²⟩ = ¼·1 + ¾·16 = 12,25 eV²">
         Δ<V>E</V>&nbsp;=&nbsp;
         <Sqrt>12,25 − 3,25<Sup>2</Sup></Sqrt>
         &nbsp;≈&nbsp;1,30 eV
       </Formula>
-      <Badge x={960} y={250} text="⟨p⟩ = 0  ≠  DIAM" color={C.amber} opacity={ramp(t, cue(7) + 0.4, cue(7) + 1.0, BACK)} />
+      <Badge x={960} y={250} text="⟨p⟩ = 0  ≠  DIAM" color={C.amber} opacity={ramp(t, cue(7), cue(7) + 0.6, BACK)} />
     </AbsoluteFill>
   );
 };

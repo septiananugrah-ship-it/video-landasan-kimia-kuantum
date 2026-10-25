@@ -18,7 +18,7 @@ const DE = 4.747;
 const AM = 1.942;
 const RE = 0.741;
 const morse = (r: number) => DE * (1 - Math.exp(-AM * (r - RE))) ** 2 - DE;
-const MP = {x: 200, y0: 340, w: 760, h: 440, r0: 0.3, r1: 3.2, e0: -5.2, e1: 1.5};
+const MP = {x: 200, y0: 330, w: 760, h: 400, r0: 0.3, r1: 3.2, e0: -5.2, e1: 1.5};
 const mx = (r: number) => MP.x + ((r - MP.r0) / (MP.r1 - MP.r0)) * MP.w;
 const my = (e: number) => MP.y0 + ((MP.e1 - e) / (MP.e1 - MP.e0)) * MP.h;
 
@@ -59,6 +59,13 @@ export const Bond: React.FC = () => {
             <circle cx={sx(xb)} cy={430} r={110} fill="url(#soft-cyan)" opacity={0.55} />
             <ellipse cx={sx(0)} cy={430} rx={60 + 70 * approach} ry={60} fill="url(#soft-mint)" opacity={sum * approach * 0.8} />
           </g>
+          {/* σ*: bidang simpul di tengah, rapat elektron nol di antara inti */}
+          <g opacity={diff}>
+            <line x1={sx(0)} y1={330} x2={sx(0)} y2={530} stroke={C.red} strokeWidth={3} strokeDasharray="8 7" />
+            <Label x={sx(0)} y={312} size={24} color={C.red} weight={600}>
+              bidang simpul
+            </Label>
+          </g>
           {[xa, xb].map((x, i) => (
             <g key={i}>
               <circle cx={sx(x)} cy={430} r={16} fill="#f2f5ff" />
@@ -81,7 +88,7 @@ export const Bond: React.FC = () => {
             <g opacity={diff}>
               <path d={line((x) => (ao(x, xa) - ao(x, xb)) * 0.9, PROF.sy)} fill="none" stroke={C.red} strokeWidth={6} />
               <circle cx={sx(0)} cy={PROF.y} r={12} fill="none" stroke={C.red} strokeWidth={4} />
-              <Label x={sx(0)} y={PROF.y + 46} size={26} color={C.red} weight={700}>
+              <Label x={sx(0) - 24} y={PROF.y + 36} size={26} color={C.red} weight={700} anchor="end">
                 simpul
               </Label>
             </g>
@@ -129,7 +136,7 @@ export const Bond: React.FC = () => {
           <line x1={MP.x} y1={my(0)} x2={MP.x + MP.w + 20} y2={my(0)} stroke={C.muted} strokeWidth={2} strokeDasharray="6 6" />
           <line x1={MP.x} y1={MP.y0 + MP.h + 40} x2={MP.x + MP.w + 30} y2={MP.y0 + MP.h + 40} stroke={C.muted} strokeWidth={2} markerEnd="url(#arrow-muted)" />
           <line x1={MP.x} y1={MP.y0 + MP.h + 40} x2={MP.x} y2={MP.y0 - 20} stroke={C.muted} strokeWidth={2} markerEnd="url(#arrow-muted)" />
-          <Label x={MP.x + MP.w + 30} y={MP.y0 + MP.h + 74} size={24} color={C.muted} anchor="end">
+          <Label x={MP.x + MP.w + 30} y={MP.y0 + MP.h + 92} size={24} color={C.muted} anchor="end">
             jarak H–H (Å)
           </Label>
           <Label x={MP.x - 16} y={MP.y0 - 20} size={24} color={C.muted} anchor="end">

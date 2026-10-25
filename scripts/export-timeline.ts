@@ -63,6 +63,12 @@ writeFileSync(
     .join('\n\n'),
 );
 
+// ---------- Teks per baris (kode → teks) untuk cek pengucapan Whisper ----------
+writeFileSync(
+  'naskah/naskah-tts.txt',
+  TIMELINE.scenes.flatMap((s) => s.tLines.map((l) => `${lineKey(s.id, l.index)}\t${l.text}`)).join('\n') + '\n',
+);
+
 // ---------- Daftar bab untuk deskripsi YouTube / LMS ----------
 const PART_NAMES: Record<number, string> = {1: 'Prinsip & teori dasar', 2: 'Implementasi dalam kimia', 3: 'Penerapan di industri'};
 const chapters: string[] = ['Kimia Kuantum — Aturan Main Kuantum: Landasan Kimia Kuantum (Modul 2)', ''];

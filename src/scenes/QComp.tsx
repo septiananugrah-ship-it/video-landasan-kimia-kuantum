@@ -1,26 +1,34 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, rand, ramp, win} from '../anim';
-import {Atom, Badge, Bond, Label, Stage} from '../components/primitives';
+import {BACK, EASE_IN_OUT, mix, rand, ramp, slot, win} from '../anim';
+import {Badge, Label, Stage} from '../components/primitives';
 import {useScene} from '../SceneContext';
 import {C, FONT} from '../theme';
 
 // Bab 17: komputer kuantum. Bit vs qubit (bola Bloch), pembacaan = pengukuran (peluang c²),
 // qubit superkonduktor dengan tingkat energi terkuantisasi, dan tujuan: simulasi molekul.
-const BL = {x: 1250, y: 540, r: 190};
+const BL = {x: 1250, y: 565, r: 190};
+// klaster kubana Fe₄S₄: Fe dan S berselang-seling di sudut kubus, tiap Fe terikat ke tiga S
+const CUBE = [-1, 1].flatMap((x) => [-1, 1].flatMap((y) => [-1, 1].map((z) => ({x, y, z, fe: (x * y * z) > 0}))));
 
 export const QComp: React.FC = () => {
-  const {t, cue} = useScene();
+  const {t, cue, wordOf} = useScene();
   const bit = win(t, cue(0) + 0.3, cue(3) - 0.1, 0.6, 0.5);
-  const bloch = ramp(t, cue(1) + 1.0, cue(1) + 2.0) * (1 - ramp(t, cue(3) - 0.4, cue(3)));
+  // bola Bloch sudah tampil di baris 0 (panah di |0⟩, seperti bit), lalu miring ke superposisi saat "Qubit"
+  const bloch = ramp(t, cue(0) + 0.8, cue(0) + 1.8) * (1 - ramp(t, cue(3) - 0.4, cue(3)));
+  const tiltIn = ramp(t, wordOf(1, 'Qubit') - 0.2, wordOf(1, 'Qubit') + 1.2, EASE_IN_OUT);
   const meas = ramp(t, cue(2) + 0.6, cue(2) + 1.2, EASE_IN_OUT);
   const chip = ramp(t, cue(3) + 0.1, cue(3) + 1.1) * (1 - ramp(t, cue(5) - 0.4, cue(5)));
   const mol = ramp(t, cue(5) + 0.2, cue(5) + 1.2);
   // keadaan qubit: θ tetap (peluang |0⟩ = cos²(θ/2) = 0,7), φ berputar
   const th = 2 * Math.acos(Math.sqrt(0.7));
   const ph = t * 1.3;
-  const result0 = rand(Math.floor((t - cue(2)) / 1.6) + 3.3) < 0.7;
-  const th2 = meas > 0 ? mix(th, result0 ? 0 : Math.PI, meas) : th;
+  // pembacaan berulang: siapkan superposisi → baca (runtuh ke |0⟩ atau |1⟩) → siapkan lagi, tanpa lompatan
+  const cyc = Math.max(0, t - cue(2) - 0.6) / 1.8;
+  const cf = cyc % 1;
+  const result0 = rand(Math.floor(cyc) * 2.71 + 0.4) < 0.7;
+  const fall = meas > 0 ? (cf < 0.3 ? ramp(cf, 0, 0.3, EASE_IN_OUT) : cf < 0.7 ? 1 : 1 - ramp(cf, 0.7, 1, EASE_IN_OUT)) : 0;
+  const th2 = mix(th * tiltIn, result0 ? 0 : Math.PI, fall);
   // proyeksi sederhana bola Bloch (sumbu z ke atas, sedikit miring)
   const P = (thv: number, phv: number) => ({
     x: BL.x + BL.r * Math.sin(thv) * Math.cos(phv),
@@ -113,38 +121,77 @@ export const QComp: React.FC = () => {
             dua tingkat terbawah = qubit
           </Label>
         </g>
-        {/* tujuan: kimia */}
+        {/* tujuan: kimia — prosesor qubit mensimulasikan klaster Fe₄S₄ (ilustrasi) */}
         <g opacity={mol}>
           {(() => {
-            const pts: [number, number][] = Array.from({length: 6}, (_, k) => [1200 + 120 * Math.cos((k * Math.PI) / 3 + t * 0.3), 540 + 120 * Math.sin((k * Math.PI) / 3 + t * 0.3)]);
+            const a = t * 0.45;
+            const b = 0.42;
+            const size = 115;
+            const cx = 1280;
+            const cy = 530;
+            const P3 = (v: {x: number; y: number; z: number}) => {
+              const x1 = v.x * Math.cos(a) - v.z * Math.sin(a);
+              const z1 = v.x * Math.sin(a) + v.z * Math.cos(a);
+              const y2 = v.y * Math.cos(b) - z1 * Math.sin(b);
+              const d = v.y * Math.sin(b) + z1 * Math.cos(b);
+              return {X: cx + size * x1, Y: cy - size * y2, d};
+            };
+            const pts = CUBE.map((v) => ({...v, ...P3(v)}));
+            const edges: [number, number][] = [];
+            for (let i = 0; i < 8; i++)
+              for (let j = i + 1; j < 8; j++)
+                if (Math.abs(CUBE[i].x - CUBE[j].x) + Math.abs(CUBE[i].y - CUBE[j].y) + Math.abs(CUBE[i].z - CUBE[j].z) === 2) edges.push([i, j]);
+            const order = pts.map((_, i) => i).sort((i, j) => pts[i].d - pts[j].d);
             return (
               <g>
-                <circle cx={1200} cy={540} r={250} fill="url(#soft-violet)" opacity={0.35} />
-                {pts.map((p, k) => {
-                  const q = pts[(k + 1) % 6];
-                  return <Bond key={k} x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} order={k % 2 ? 1 : 2} width={10} />;
-                })}
-                {pts.map((p, k) => (
-                  <Atom key={k} x={p[0]} y={p[1]} el={k === 0 ? 'Fe' : k === 3 ? 'N' : 'C'} r={28} glow={0} label={k === 0 ? 'Fe' : undefined} />
+                <circle cx={cx} cy={cy} r={260} fill="url(#soft-violet)" opacity={0.3} />
+                {edges.map(([i, j], k) => (
+                  <line key={k} x1={pts[i].X} y1={pts[i].Y} x2={pts[j].X} y2={pts[j].Y} stroke="#8b97b8" strokeWidth={8} strokeLinecap="round" opacity={0.55 + 0.25 * ((pts[i].d + pts[j].d) / 2 + 1) / 2} />
                 ))}
+                {order.map((i) => {
+                  const q = pts[i];
+                  const r = q.fe ? 32 : 27;
+                  return (
+                    <g key={i}>
+                      <circle cx={q.X} cy={q.Y} r={r} fill={q.fe ? '#d9773a' : '#f2d14a'} stroke="#0b0f1c" strokeWidth={3} />
+                      <circle cx={q.X - r * 0.3} cy={q.Y - r * 0.35} r={r * 0.3} fill="#fff" opacity={0.35} />
+                      <text x={q.X} y={q.Y + 1} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.sans} fontWeight={700} fontSize={22} fill="#1d2440">
+                        {q.fe ? 'Fe' : 'S'}
+                      </text>
+                    </g>
+                  );
+                })}
               </g>
             );
           })()}
-          <rect x={300} y={430} width={340} height={220} rx={18} fill="#13203f" stroke={C.cyan} strokeWidth={3} />
-          <text x={470} y={550} textAnchor="middle" fontFamily={FONT.sans} fontSize={34} fill={C.cyan} fontWeight={700}>
-            qubit
-          </text>
-          <line x1={660} y1={540} x2={900} y2={540} stroke={C.gold} strokeWidth={5} markerEnd="url(#arrow-gold)" />
-          <Label x={780} y={500} size={26} color={C.gold}>
+          {/* prosesor qubit: 3 × 3 qubit, masing-masing dalam superposisi */}
+          <rect x={290} y={400} width={330} height={290} rx={18} fill="#13203f" stroke={C.cyan} strokeWidth={3} />
+          {Array.from({length: 9}, (_, k) => {
+            const qx = 360 + (k % 3) * 95;
+            const qy = 470 + Math.floor(k / 3) * 80;
+            const aa = t * (1.2 + 0.15 * k) + k;
+            return (
+              <g key={k}>
+                <circle cx={qx} cy={qy} r={24} fill="none" stroke={C.violet} strokeWidth={2} opacity={0.7} />
+                <line x1={qx} y1={qy} x2={qx + 20 * Math.sin(aa)} y2={qy - 20 * Math.cos(aa)} stroke={C.gold} strokeWidth={4} strokeLinecap="round" />
+                {k % 3 < 2 ? <line x1={qx + 26} y1={qy} x2={qx + 69} y2={qy} stroke={C.cyan} strokeWidth={2} opacity={0.4} /> : null}
+              </g>
+            );
+          })}
+          <Label x={455} y={730} size={26} color={C.cyan} weight={700}>
+            prosesor qubit
+          </Label>
+          <line x1={650} y1={545} x2={940} y2={545} stroke={C.gold} strokeWidth={5} markerEnd="url(#arrow-gold)" />
+          <Label x={795} y={505} size={26} color={C.gold}>
             simulasi
           </Label>
-          <Label x={1200} y={840} size={26} color={C.muted}>
-            molekul yang terlalu rumit bagi komputer biasa (ilustrasi)
+          <Label x={1280} y={800} size={26} color={C.muted}>
+            contoh target: klaster besi–belerang Fe₄S₄ pada enzim (ilustrasi)
           </Label>
         </g>
       </Stage>
       <Badge x={960} y={250} text="NOBEL FISIKA 2025 · CLARKE, DEVORET & MARTINIS" color={C.gold} opacity={win(t, cue(4) - 0.1, cue(5) - 0.1, 0.5, 0.4) * ramp(t, cue(4) - 0.1, cue(4) + 0.6, BACK)} />
-      <Badge x={960} y={250} text="ATURAN PENGUKURAN = CARA MEMBACA QUBIT" color={C.cyan} opacity={win(t, cue(2), cue(3) - 0.1, 0.5, 0.4)} />
+      <Badge x={960} y={250} text="ATURAN PENGUKURAN = CARA MEMBACA QUBIT" color={C.cyan} opacity={slot(t, cue(2), cue(3) - 0.05, 0.5)} />
     </AbsoluteFill>
   );
 };

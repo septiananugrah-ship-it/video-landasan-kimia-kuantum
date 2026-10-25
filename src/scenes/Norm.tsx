@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, ramp, slot, win} from '../anim';
 import {Badge, Formula, Frac, Label, Stage, Sqrt, Sub, Sup, V} from '../components/primitives';
 import {id} from '../components/viz';
 import {useScene} from '../SceneContext';
@@ -12,6 +12,16 @@ const P = {x: 200, y: 730, w: 720, sy: 150};
 
 const curve = (f: (u: number) => number, sy: number, n = 200) =>
   Array.from({length: n + 1}, (_, k) => `${k ? 'L' : 'M'}${(P.x + (k / n) * P.w).toFixed(1)},${(P.y - f(k / n) * sy).toFixed(1)}`).join(' ');
+
+// rapat peluang umum (sebelum contoh sinus) dan luas kumulatifnya (dinormalisasi: total = 1)
+const g = (u: number) => Math.exp(-(((u - 0.5) / 0.18) ** 2)) * 1.9;
+const G_CDF = (() => {
+  const n = 400;
+  const acc = [0];
+  for (let k = 1; k <= n; k++) acc.push(acc[k - 1] + (g((k - 0.5) / n) * 1) / n);
+  return acc.map((v) => v / acc[n]);
+})();
+const cdf = (u: number) => G_CDF[Math.max(0, Math.min(400, Math.round(u * 400)))];
 
 const BAD = [
   {need: 'bernilai tunggal', bad: 'bercabang', x: 380},
@@ -40,7 +50,9 @@ export const Norm: React.FC = () => {
   const {t, cue} = useScene();
   const partA = 1 - ramp(t, cue(6) - 0.4, cue(6) + 0.4, EASE_IN_OUT);
   const box = ramp(t, cue(2) - 0.3, cue(2) + 0.6);
-  const fill = ramp(t, cue(0) + 0.6, cue(1) + 2.5, EASE_IN_OUT);
+  // luas di bawah |ψ|² disapu dari kiri ke kanan; penghitung = peluang kumulatif → tepat 1
+  const fill = ramp(t, cue(0) + 1.4, cue(1) + 1.2, EASE_IN_OUT);
+  const gCurve = ramp(t, 0.1, cue(0) + 0.9, EASE_IN_OUT);
   // amplitudo: 1 (belum ternormalisasi) → √2 (L = 1) setelah dikalikan √(2/L)
   const scaleUp = ramp(t, cue(3) + 2.2, cue(3) + 3.6, EASE_IN_OUT) * (1 - ramp(t, cue(4) - 0.2, cue(4) + 0.6));
   const big = ramp(t, cue(4) + 0.2, cue(4) + 1.4, EASE_IN_OUT) * (1 - ramp(t, cue(6) - 0.5, cue(6)));
@@ -49,12 +61,10 @@ export const Norm: React.FC = () => {
   const fUser = (u: number) => amp * Math.sin(Math.PI * u);
   const areaPath = `${curve((u) => fUser(u) ** 2 / Math.max(1, amp * amp / 2.4), P.sy * 0.7)} L${P.x + P.w},${P.y} L${P.x},${P.y} Z`;
   const showArea = t >= cue(2) - 0.3;
-  const generic = (1 - box) * fill;
+  const generic = 1 - box;
   const bad = ramp(t, cue(6) + 0.2, cue(6) + 1.0);
   const okLbl = ramp(t, cue(7) - 0.2, cue(7) + 0.6);
   const xs = BAD.map((_, i) => ramp(t, cue(8) + 0.3 + i * 0.6, cue(8) + 0.9 + i * 0.6, BACK));
-  // sebelum contoh sinus: rapat peluang umum dengan luas yang terisi bertahap
-  const g = (u: number) => Math.exp(-(((u - 0.5) / 0.18) ** 2)) * 1.9;
   const gArea = (() => {
     const n = 160;
     const pts: string[] = [];
@@ -64,16 +74,22 @@ export const Norm: React.FC = () => {
     }
     return `M${P.x},${P.y} L${pts.join(' L')} L${(P.x + fill * P.w).toFixed(1)},${P.y} Z`;
   })();
-  const shownArea = t < cue(2) - 0.3 ? fill : t < cue(4) ? area : 27;
+  const shownArea = t < cue(2) - 0.3 ? cdf(fill) : t < cue(4) ? area : 27;
+  const done = t < cue(2) - 0.3 && fill > 0.995;
+  // satu slot kartu rumus di kanan
+  const S = [cue(0) + 0.3, cue(2) - 0.05, cue(3) + 2.0, cue(4) - 0.05, cue(6) - 0.2];
   return (
     <AbsoluteFill>
       <Stage>
         <g opacity={partA}>
           <line x1={P.x - 30} y1={P.y} x2={P.x + P.w + 40} y2={P.y} stroke={C.muted} strokeWidth={2} />
           <g opacity={generic}>
-            <path d={gArea} fill={C.violet} opacity={0.4} />
-            <path d={curve(g, P.sy)} fill="none" stroke={C.violet} strokeWidth={5} />
-            <Label x={P.x + P.w / 2} y={P.y - 2.05 * P.sy} size={30} color={C.violet} font="serif" italic>
+            {fill > 0 ? <path d={gArea} fill={C.violet} opacity={0.42} /> : null}
+            <path d={curve(g, P.sy)} fill="none" stroke={C.violet} strokeWidth={5} strokeDasharray="1200 1200" strokeDashoffset={1200 * (1 - gCurve)} pathLength={1200} />
+            {fill > 0.001 && fill < 0.999 ? (
+              <line x1={P.x + fill * P.w} y1={P.y + 8} x2={P.x + fill * P.w} y2={P.y - 2.05 * P.sy + 40} stroke={C.gold} strokeWidth={3} strokeDasharray="6 6" />
+            ) : null}
+            <Label x={P.x + P.w / 2} y={P.y - 2.05 * P.sy} size={30} color={C.violet} font="serif" italic opacity={gCurve}>
               |ψ|²
             </Label>
           </g>
@@ -88,16 +104,21 @@ export const Norm: React.FC = () => {
               L
             </Label>
             {showArea ? <path d={areaPath} fill={C.gold} opacity={0.3} /> : null}
+            {showArea ? (
+              <Label x={P.x + P.w / 2} y={P.y - 34} size={24} color={C.gold} opacity={0.95}>
+                {big > 0.5 ? 'luas di bawah |f|²' : scaleUp > 0.5 ? 'luas di bawah |ψ|²' : 'luas di bawah sin²'}
+              </Label>
+            ) : null}
             <path d={curve(fUser, P.sy * 0.7 / Math.max(1, amp / 1.6))} fill="none" stroke={C.gold} strokeWidth={5} />
             <Label x={P.x + P.w - 30} y={P.y - 330} size={26} color={C.gold} anchor="end" font="serif" italic>
               {big > 0.5 ? 'f(x), belum diskalakan' : scaleUp > 0.5 ? 'ψ = √(2/L) sin(πx/L)' : 'f = sin(πx/L)'}
             </Label>
           </g>
           {/* penghitung luas */}
-          <g opacity={Math.max(generic, box)}>
-            <rect x={P.x + P.w / 2 - 170} y={P.y + 60} width={340} height={64} rx={14} fill="rgba(12,18,40,0.85)" stroke={shownArea > 26 ? C.red : C.gold} strokeWidth={2} />
-            <text x={P.x + P.w / 2} y={P.y + 92} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.mono} fontSize={30} fontWeight={600} fill={shownArea > 26 ? C.red : C.gold}>
-              {t < cue(2) - 0.3 ? `luas = ${id(shownArea, 2)}` : shownArea > 26 ? 'norma = 27' : Math.abs(shownArea - 1) < 0.005 ? 'luas = 1' : `luas = ${id(shownArea, 2)} L`}
+          <g opacity={Math.max(generic * ramp(t, cue(0) + 1.0, cue(0) + 1.6), box)}>
+            <rect x={P.x + P.w / 2 - 190} y={P.y + 60} width={380} height={64} rx={14} fill="rgba(12,18,40,0.85)" stroke={shownArea > 26 ? C.red : done ? C.mint : C.gold} strokeWidth={2} />
+            <text x={P.x + P.w / 2} y={P.y + 92} textAnchor="middle" dominantBaseline="central" fontFamily={FONT.mono} fontSize={30} fontWeight={600} fill={shownArea > 26 ? C.red : done ? C.mint : C.gold}>
+              {t < cue(2) - 0.3 ? (done ? 'peluang total = 1 ✓' : `peluang = ${id(shownArea, 2)}`) : shownArea > 26 ? 'norma = 27' : Math.abs(shownArea - 1) < 0.005 ? 'luas = 1' : `luas = ${id(shownArea, 2)} L`}
             </text>
           </g>
         </g>
@@ -123,10 +144,10 @@ export const Norm: React.FC = () => {
           ))}
         </g>
       </Stage>
-      <Formula x={1400} y={430} p={win(t, cue(0) + 0.3, cue(2) - 0.1, 0.7, 0.4)} accent={C.gold} caption="syarat normalisasi: peluang total = 1">
+      <Formula x={1400} y={430} p={slot(t, S[0], S[1])} accent={C.gold} caption="syarat normalisasi: peluang total = 1">
         <span style={{fontSize: '1.2em'}}>∫</span>&thinsp;|<V>ψ</V>|<Sup>2</Sup>&thinsp;<V>dτ</V>&nbsp;=&nbsp;1
       </Formula>
-      <Formula x={1400} y={430} p={win(t, cue(2), cue(3) + 2.0, 0.7, 0.4)} accent={C.gold} caption="luas di bawah sin² pada 0 < x < L">
+      <Formula x={1400} y={430} p={slot(t, S[1], S[2])} accent={C.gold} caption="luas di bawah sin² pada 0 < x < L">
         <span style={{fontSize: '1.2em'}}>∫</span>
         <Sub>0</Sub>
         <Sup>L</Sup>&thinsp;sin<Sup>2</Sup>
@@ -134,7 +155,7 @@ export const Norm: React.FC = () => {
         <V>dx</V>&nbsp;=&nbsp;
         <Frac n={<V>L</V>} d="2" />
       </Formula>
-      <Formula x={1400} y={430} p={win(t, cue(3) + 2.0, cue(4) - 0.1, 0.7, 0.4)} accent={C.mint} caption="dikalikan konstanta normalisasi">
+      <Formula x={1400} y={430} p={slot(t, S[2], S[3])} accent={C.mint} caption="dikalikan konstanta normalisasi">
         <V>ψ</V>(<V>x</V>)&nbsp;=&nbsp;
         <Sqrt>
           <Frac n="2" d={<V>L</V>} size={0.75} />
@@ -142,7 +163,7 @@ export const Norm: React.FC = () => {
         &thinsp;sin&thinsp;
         <Frac n={<V>πx</V>} d={<V>L</V>} />
       </Formula>
-      <Formula x={1400} y={430} p={win(t, cue(4), cue(6) - 0.2, 0.7, 0.4)} accent={C.red} caption="norma 27 → bagi dengan akar 27">
+      <Formula x={1400} y={430} p={slot(t, S[3], S[4])} accent={C.red} caption="norma 27 → bagi dengan akar 27">
         <V>ψ</V>&nbsp;=&nbsp;
         <Frac n={<V>f</V>} d={<Sqrt>27</Sqrt>} />
       </Formula>

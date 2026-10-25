@@ -15,6 +15,13 @@ export const ramp = (t: number, a: number, b: number, easing: (x: number) => num
 export const win = (t: number, a: number, b: number, inDur = 0.6, outDur = 0.6) =>
   Math.min(ramp(t, a, a + inDur), 1 - ramp(t, b, b + outDur, EASE_IN_OUT));
 
+/**
+ * Kartu bergantian di satu "slot" (posisi yang sama): tampil mulai a, lalu sudah HILANG tepat di b.
+ * Pakai batas b yang sama sebagai awal kartu berikutnya → tidak pernah ada dua kartu bertumpuk.
+ */
+export const slot = (t: number, a: number, b: number, inDur = 0.55, outDur = 0.35) =>
+  Math.min(ramp(t, a, a + inDur), 1 - ramp(t, b - outDur, b, EASE_IN_OUT));
+
 export const mix = (a: number, b: number, p: number) => a + (b - a) * p;
 
 export const lerpPts = (a: [number, number], b: [number, number], p: number): [number, number] => [

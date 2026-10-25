@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, rand, ramp, win} from '../anim';
+import {BACK, rand, ramp, slot, win} from '../anim';
 import {Badge, Formula, Frac, Hbar, Label, Op, Stage, V} from '../components/primitives';
 import {PhaseWave, PhaseWheel, cabs, freePacket} from '../components/qm';
 import {useScene} from '../SceneContext';
@@ -8,7 +8,7 @@ import {C, FONT} from '../theme';
 
 // Bab 9: persamaan Schrödinger bergantung waktu. Paket Gauss bebas (solusi analitik)
 // merambat sambil melebar; pada pengukuran ia "runtuh" menjadi satu titik.
-const AX = {x: 120, y: 640, w: 1680, sy: 210};
+const AX = {x: 120, y: 660, w: 1680, sy: 250};
 const X0 = -12;
 const X1 = 28;
 const SIG = 1.4;
@@ -20,9 +20,10 @@ export const TDSE: React.FC = () => {
   const {t, cue, wordOf} = useScene();
   const on = ramp(t, cue(0) + 0.3, cue(0) + 1.4);
   const meas = wordOf(4, 'pengukuran');
-  // waktu simulasi: 0 → 4 selama baris 2–4, lalu diulang 0 → 10 di baris 5–6
-  const run1 = ramp(t, cue(2), meas, (x) => x) * 4;
-  const run2 = ramp(t, cue(5) - 0.2, cue(6) + 4, (x) => x) * 10;
+  // waktu simulasi: 0 → 4 sejak baris 0 sampai kata "pengukuran" (baris 4), lalu diulang 0 → 8 di baris 5–6
+  // (τ = 8: paket masih utuh di dalam layar)
+  const run1 = ramp(t, cue(0) + 1.4, meas, (x) => x) * 4;
+  const run2 = ramp(t, cue(5) - 0.2, cue(6) + 4, (x) => x) * 8;
   const phase2 = t >= cue(5) - 0.2;
   const tau = phase2 ? run2 : run1;
   const collapse = !phase2 && t > meas ? ramp(t, meas, meas + 0.4) : 0;
@@ -87,15 +88,15 @@ export const TDSE: React.FC = () => {
           </Label>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(1), cue(4) - 0.1, 0.7, 0.4)} accent={C.gold} caption="postulat 5: persamaan Schrödinger bergantung waktu">
+      <Formula x={960} y={250} p={slot(t, cue(1), cue(4) - 0.05)} accent={C.gold} caption="postulat 5: persamaan Schrödinger bergantung waktu">
         <V>i</V>
         <Hbar />
         &thinsp;
         <Frac n={<>∂<V>Ψ</V></>} d={<>∂<V>t</V></>} />
         &nbsp;=&nbsp;<Op>H</Op>&thinsp;<V>Ψ</V>
       </Formula>
-      <Badge x={960} y={250} text="KEACAKAN HANYA SAAT PENGUKURAN" color={C.red} opacity={win(t, cue(4), cue(5) - 0.3, 0.5, 0.4) * ramp(t, cue(4), cue(4) + 0.6, BACK)} />
-      <Badge x={960} y={250} text="DETERMINISTIK: Ψ(0) → Ψ(t)" color={C.mint} opacity={win(t, cue(5) - 0.2, 9999, 0.5, 0.4)} />
+      <Badge x={960} y={250} text="KEACAKAN HANYA SAAT PENGUKURAN" color={C.red} opacity={slot(t, cue(4) - 0.05, cue(5) - 0.2, 0.5) * ramp(t, cue(4) - 0.05, cue(4) + 0.55, BACK)} />
+      <Badge x={960} y={250} text="DETERMINISTIK: Ψ(0) → Ψ(t)" color={C.mint} opacity={slot(t, cue(5) - 0.2, 9999, 0.5)} />
     </AbsoluteFill>
   );
 };

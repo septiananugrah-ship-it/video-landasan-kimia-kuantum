@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, EASE_IN_OUT, mix, rand, ramp, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, rand, ramp, slot} from '../anim';
 import {Badge, Formula, Frac, Label, Stage, Sqrt, Sub, Sup, V} from '../components/primitives';
 import {useScene} from '../SceneContext';
 import {C, FONT} from '../theme';
@@ -43,6 +43,11 @@ const RESULTS = Array.from({length: N_TRIALS}, (_, k) => rand(k * 4.17 + 0.9) < 
 export const Measure: React.FC = () => {
   const {t, cue, wordOf} = useScene();
   const state = ramp(t, cue(0) + 0.2, cue(0) + 1.2);
+  // baris 0–1: keadaan superposisi tampil besar di tengah, lalu bergeser ke kiri saat alat ukur datang
+  const slide = ramp(t, cue(2) - 1.0, cue(2) + 0.2, EASE_IN_OUT);
+  const stX = mix(960 - ST.x, 0, slide);
+  const stS = mix(1.15, 1, slide);
+  const stY = mix(30, 0, slide);
   const coef = ramp(t, cue(1) + 0.4, cue(1) + 1.4);
   const det = ramp(t, cue(2) - 0.3, cue(2) + 0.6);
   // percobaan: dari baris 2 sampai baris 6, makin cepat
@@ -65,7 +70,7 @@ export const Measure: React.FC = () => {
     <AbsoluteFill>
       <Stage>
         {/* keadaan sebelum ukur */}
-        <g opacity={state}>
+        <g opacity={state} transform={`translate(${ST.x + stX} ${ST.y + stY}) scale(${stS}) translate(${-ST.x} ${-ST.y})`}>
           <rect x={ST.x - 250} y={ST.y - 210} width={500} height={420} rx={26} fill="rgba(12,18,40,0.75)" stroke={C.faint} strokeWidth={2} />
           <Orb x={ST.x - 110 + 110 * collapse} y={ST.y - 10} kind="1s" s={s1} />
           <Orb x={ST.x + 110} y={ST.y - 10} kind="2s" s={0.8 * s2 + 0.001} opacity={s2} t={t} />
@@ -131,7 +136,7 @@ export const Measure: React.FC = () => {
           </Label>
         </g>
       </Stage>
-      <Formula x={960} y={250} p={win(t, cue(1) + 0.2, cue(3) - 0.1, 0.7, 0.4)} accent={C.gold} caption="peluang hasil ukur aₙ (eigenbasis tak terdegenerasi)">
+      <Formula x={960} y={250} p={slot(t, cue(1) + 0.2, cue(3) - 0.05)} accent={C.gold} caption="peluang hasil ukur aₙ (eigenbasis tak terdegenerasi)">
         <V>ψ</V>&nbsp;=&nbsp;Σ&thinsp;<V>c</V>
         <Sub>n</Sub>
         <V>φ</V>
@@ -139,7 +144,7 @@ export const Measure: React.FC = () => {
         <Sub>n</Sub>)&nbsp;=&nbsp;|<V>c</V>
         <Sub>n</Sub>|<Sup>2</Sup>
       </Formula>
-      <Formula x={960} y={250} p={win(t, cue(3), cue(5) - 0.1, 0.7, 0.4)} accent={C.cyan} caption="contoh modul: atom hidrogen">
+      <Formula x={960} y={250} p={slot(t, cue(3) - 0.05, cue(5) - 0.05)} accent={C.cyan} caption="contoh modul: atom hidrogen">
         <V>ψ</V>&nbsp;=&nbsp;
         <Sqrt>
           <Frac n="3" d="4" size={0.7} />
@@ -150,8 +155,8 @@ export const Measure: React.FC = () => {
         <V>ψ</V>
         <Sub>2s</Sub>
       </Formula>
-      <Badge x={960} y={250} text="SATU HASIL: ACAK · STATISTIK: PASTI" color={C.gold} opacity={win(t, cue(5), cue(6) - 0.1, 0.5, 0.4) * ramp(t, cue(5), cue(5) + 0.6, BACK)} />
-      <Badge x={960} y={250} text="KEADAAN RUNTUH KE FUNGSI EIGEN" color={C.cyan} opacity={ramp(t, cue(6), cue(6) + 0.6)} />
+      <Badge x={960} y={250} text="SATU HASIL: ACAK · STATISTIK: PASTI" color={C.gold} opacity={slot(t, cue(5) - 0.05, cue(6) - 0.05, 0.5) * ramp(t, cue(5) - 0.05, cue(5) + 0.55, BACK)} />
+      <Badge x={960} y={250} text="KEADAAN RUNTUH KE FUNGSI EIGEN" color={C.cyan} opacity={ramp(t, cue(6) - 0.05, cue(6) + 0.55)} />
     </AbsoluteFill>
   );
 };
