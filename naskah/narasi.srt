@@ -1,0 +1,599 @@
+1
+00:00:01,600 --> 00:00:09,504
+Tahun 1989, sebuah tim di laboratorium Hitachi menembakkan elektron ke sebuah layar, satu per satu.
+
+2
+00:00:09,504 --> 00:00:15,509
+Setiap elektron tiba sebagai satu titik kecil, di tempat yang tampaknya acak.
+
+3
+00:00:15,509 --> 00:00:22,170
+Tetapi setelah ribuan elektron, titik-titik itu menyusun pola garis terang dan gelap.
+
+4
+00:00:22,170 --> 00:00:26,000
+Itu pola interferensi, ciri khas gelombang.
+
+5
+00:00:26,000 --> 00:00:31,162
+Jadi, apa yang menentukan di mana setiap elektron mendarat?
+
+6
+00:00:31,162 --> 00:00:38,343
+Jawabannya: sebuah fungsi gelombang, dan enam aturan main yang menjelaskan cara membacanya.
+
+7
+00:00:47,333 --> 00:00:52,462
+Video ini membahas landasan kimia kuantum dalam tiga bagian.
+
+8
+00:00:52,462 --> 00:01:00,308
+Pertama, prinsip dan teori dasarnya: fungsi gelombang, operator, pengukuran, dan persamaan Schrödinger.
+
+9
+00:01:00,308 --> 00:01:07,954
+Kedua, implementasinya dalam kimia: konfigurasi elektron, ikatan kimia, dan spektroskopi.
+
+10
+00:01:07,954 --> 00:01:15,135
+Dan ketiga, penerapannya di industri: MRI, kimia komputasi, dan komputer kuantum.
+
+11
+00:01:17,733 --> 00:01:25,834
+Aturan pertama: seluruh informasi tentang sebuah sistem tersimpan dalam satu fungsi, yaitu fungsi gelombang psi.
+
+12
+00:01:25,834 --> 00:01:31,540
+Psi bergantung pada posisi dan waktu, dan nilainya boleh berupa bilangan kompleks.
+
+13
+00:01:31,540 --> 00:01:39,653
+Bayangkan setiap titik membawa sebuah panah kecil: panjangnya adalah besar psi, arahnya adalah fasenya.
+
+14
+00:01:39,653 --> 00:01:42,505
+Psi sendiri tidak bisa diukur langsung.
+
+15
+00:01:42,505 --> 00:01:47,388
+Yang bermakna fisis adalah kuadrat besarnya: psi bintang kali psi.
+
+16
+00:01:47,388 --> 00:01:51,484
+Menurut Max Born, besaran ini adalah rapat peluang.
+
+17
+00:01:51,484 --> 00:01:58,510
+Peluang menemukan partikel di antara x dan x tambah d x sama dengan psi kuadrat kali d x.
+
+18
+00:01:58,510 --> 00:02:05,759
+Di mana psi kuadrat besar, elektron sering ditemukan. Di mana nol, elektron tidak pernah muncul.
+
+19
+00:02:05,759 --> 00:02:13,294
+Inilah mengapa titik-titik elektron tadi menumpuk membentuk pola: mereka mengikuti psi kuadrat.
+
+20
+00:02:15,900 --> 00:02:23,492
+Karena psi kuadrat adalah rapat peluang, peluang menemukan partikel di mana saja harus tepat satu.
+
+21
+00:02:23,492 --> 00:02:30,462
+Syarat ini disebut normalisasi: integral psi kuadrat di seluruh ruang sama dengan satu.
+
+22
+00:02:30,462 --> 00:02:34,735
+Contohnya fungsi sinus pi x per L di dalam kotak selebar L.
+
+23
+00:02:34,735 --> 00:02:43,094
+Luas di bawah sinus kuadratnya adalah L per dua, jadi fungsi itu harus dikalikan konstanta akar dua per L.
+
+24
+00:02:43,094 --> 00:02:50,497
+Jika norma awalnya bukan satu, misalnya dua puluh tujuh, itu hanya berarti skalanya belum diatur.
+
+25
+00:02:50,497 --> 00:02:56,403
+Itu bukan dua puluh tujuh partikel, dan bukan peluang yang lebih dari satu.
+
+26
+00:02:56,403 --> 00:03:00,011
+Tidak semua fungsi boleh menjadi fungsi gelombang.
+
+27
+00:03:00,011 --> 00:03:04,973
+Ia harus bernilai tunggal, kontinu, dan dapat dinormalisasi.
+
+28
+00:03:04,973 --> 00:03:10,324
+Fungsi yang bercabang, melompat, atau membesar tanpa batas langsung gugur.
+
+29
+00:03:12,933 --> 00:03:20,926
+Jika phi satu dan phi dua adalah keadaan yang sah, jumlah keduanya juga sah. Ini prinsip superposisi.
+
+30
+00:03:20,926 --> 00:03:27,764
+Gelombang sinus dengan satu punuk dan dua punuk bisa dijumlahkan menjadi bentuk baru yang miring.
+
+31
+00:03:27,764 --> 00:03:34,124
+Agar jumlah seperti ini mudah dihitung, kita memakai fungsi basis yang saling ortogonal.
+
+32
+00:03:34,124 --> 00:03:42,414
+Ortogonal berarti integral hasil kali keduanya nol: luas bagian positif tepat menghapus bagian negatif.
+
+33
+00:03:42,414 --> 00:03:46,976
+Basis yang ortogonal dan ternormalisasi disebut ortonormal.
+
+34
+00:03:46,976 --> 00:03:52,913
+Contoh dari modul: psi sama dengan C kali, dua phi satu, tambah i phi dua.
+
+35
+00:03:52,913 --> 00:04:02,060
+Normalisasi memberi C kuadrat kali, empat tambah satu, sama dengan satu. Jadi C sama dengan satu per akar lima.
+
+36
+00:04:02,060 --> 00:04:10,241
+Kuadrat besar koefisien itu, empat per lima dan satu per lima, nanti menjadi peluang hasil pengukuran.
+
+37
+00:04:12,833 --> 00:04:19,980
+Aturan kedua: setiap besaran fisis yang dapat diukur diwakili oleh sebuah operator.
+
+38
+00:04:19,980 --> 00:04:24,919
+Operator adalah mesin yang mengubah satu fungsi menjadi fungsi lain.
+
+39
+00:04:24,919 --> 00:04:28,338
+Operator posisi cukup mengalikan dengan x.
+
+40
+00:04:28,338 --> 00:04:33,667
+Operator momentum adalah minus i h bar kali turunan terhadap x.
+
+41
+00:04:33,667 --> 00:04:44,621
+Dengan memasukkannya ke p kuadrat per dua m, kita mendapat operator energi kinetik: minus h bar kuadrat per dua m, kali turunan kedua.
+
+42
+00:04:44,621 --> 00:04:53,179
+Energi kinetik ditambah energi potensial menghasilkan operator energi total, yaitu Hamiltonian, H topi.
+
+43
+00:04:53,179 --> 00:04:56,787
+Operator kuantum harus linear dan Hermitian.
+
+44
+00:04:56,787 --> 00:05:04,579
+Sifat Hermitian menjamin bahwa setiap hasil pengukurannya berupa bilangan real, bukan bilangan kompleks.
+
+45
+00:05:07,167 --> 00:05:13,747
+Aturan ketiga: hasil pengukuran hanya boleh berupa nilai eigen dari operatornya.
+
+46
+00:05:13,747 --> 00:05:22,614
+Fungsi eigen adalah fungsi istimewa: setelah dikenai operator, bentuknya tetap, hanya dikalikan sebuah konstanta.
+
+47
+00:05:22,614 --> 00:05:25,290
+Konstanta itulah nilai eigennya.
+
+48
+00:05:25,290 --> 00:05:34,826
+Ambil e pangkat i k x. Operator momentum mengembalikannya utuh, dikalikan h bar k. Jadi momentumnya pasti h bar k.
+
+49
+00:05:34,826 --> 00:05:42,984
+Operator energi kinetik juga mengembalikannya utuh, dengan nilai eigen h bar kuadrat k kuadrat per dua m.
+
+50
+00:05:42,984 --> 00:05:51,554
+Tetapi operator posisi menghasilkan x kali fungsinya. x bukan konstanta, jadi ini bukan persamaan eigen.
+
+51
+00:05:51,554 --> 00:05:58,203
+Satu fungsi bisa menjadi fungsi eigen untuk satu besaran, tetapi tidak untuk besaran lain.
+
+52
+00:05:58,203 --> 00:06:08,013
+Contoh angka dari modul: untuk k sepuluh pangkat sepuluh per meter, energi elektronnya sekitar tiga koma delapan satu elektronvolt.
+
+53
+00:06:10,600 --> 00:06:16,683
+Lalu apa yang terjadi bila keadaan bukan fungsi eigen, melainkan superposisi?
+
+54
+00:06:16,683 --> 00:06:24,853
+Uraikan keadaan itu ke dalam fungsi eigen operatornya. Setiap fungsi eigen mendapat koefisien c n.
+
+55
+00:06:24,853 --> 00:06:32,645
+Satu kali pengukuran selalu memberi tepat satu nilai eigen, dan peluangnya sama dengan c n kuadrat.
+
+56
+00:06:32,645 --> 00:06:39,026
+Contoh dari modul: keadaan campuran orbital satu s dan dua s pada atom hidrogen.
+
+57
+00:06:39,026 --> 00:06:45,863
+Peluang mendapat energi satu s adalah tiga per empat, dan energi dua s satu per empat.
+
+58
+00:06:45,863 --> 00:06:52,724
+Kita tidak bisa meramal hasil satu pengukuran. Yang bisa diramal hanyalah statistiknya.
+
+59
+00:06:52,724 --> 00:07:00,259
+Dan setelah diukur, keadaan berubah: ia runtuh menjadi fungsi eigen yang sesuai dengan hasilnya.
+
+60
+00:07:00,259 --> 00:07:04,466
+Bila diukur lagi segera, hasilnya sama persis.
+
+61
+00:07:07,067 --> 00:07:12,892
+Aturan keempat memberi rata-rata dari banyak pengukuran: nilai harapan.
+
+62
+00:07:12,892 --> 00:07:18,352
+Rumusnya: integral psi bintang, kali operator yang dikenakan pada psi.
+
+63
+00:07:18,352 --> 00:07:26,599
+Misalkan energi satu elektronvolt muncul dengan peluang seperempat, dan empat elektronvolt dengan peluang tiga perempat.
+
+64
+00:07:26,599 --> 00:07:30,595
+Nilai harapannya tiga koma dua lima elektronvolt.
+
+65
+00:07:30,595 --> 00:07:38,776
+Padahal satu kali pengukuran tidak akan pernah menghasilkan tiga koma dua lima. Hanya satu atau empat.
+
+66
+00:07:38,776 --> 00:07:47,055
+Sebaran hasilnya diukur oleh ketidakpastian: akar dari rata-rata kuadrat dikurangi kuadrat rata-rata.
+
+67
+00:07:47,055 --> 00:07:53,327
+Untuk contoh ini, ketidakpastian energinya sekitar satu koma tiga elektronvolt.
+
+68
+00:07:53,327 --> 00:08:03,149
+Hati-hati: momentum rata-rata nol tidak berarti partikelnya diam. Ia bisa bergerak ke kiri dan ke kanan dengan peluang sama.
+
+69
+00:08:05,733 --> 00:08:13,148
+Bisakah dua besaran diketahui pasti sekaligus? Jawabannya ada pada urutan operator.
+
+70
+00:08:13,148 --> 00:08:17,145
+Komutator A dan B adalah A B dikurangi B A.
+
+71
+00:08:17,145 --> 00:08:23,694
+Untuk posisi dan momentum, x p minus p x bekerja pada psi menghasilkan i h bar kali psi.
+
+72
+00:08:23,694 --> 00:08:29,222
+Suku x kali turunan psi saling menghapus, dan yang tersisa hanya i h bar.
+
+73
+00:08:29,222 --> 00:08:34,816
+Komutator yang tidak nol berarti kedua besaran tidak dapat sama-sama pasti.
+
+74
+00:08:34,816 --> 00:08:42,351
+Hasilnya adalah prinsip ketidakpastian Heisenberg: delta x kali delta p paling kecil h bar per dua.
+
+75
+00:08:42,351 --> 00:08:48,446
+Paket gelombang yang sempit dalam posisi harus lebar dalam momentum, dan sebaliknya.
+
+76
+00:08:48,446 --> 00:08:57,204
+Sebaliknya, operator yang komut, seperti L kuadrat dan L z pada atom, dapat memiliki nilai pasti bersamaan.
+
+77
+00:08:59,800 --> 00:09:05,206
+Aturan kelima menjelaskan bagaimana keadaan berubah terhadap waktu.
+
+78
+00:09:05,206 --> 00:09:13,307
+Itulah persamaan Schrödinger bergantung waktu: i h bar kali turunan psi terhadap waktu sama dengan H topi psi.
+
+79
+00:09:13,307 --> 00:09:16,537
+Persamaan ini sepenuhnya deterministik.
+
+80
+00:09:16,537 --> 00:09:22,243
+Jika psi diketahui sekarang, psi di masa depan dapat dihitung dengan pasti.
+
+81
+00:09:22,243 --> 00:09:26,062
+Keacakan hanya muncul pada saat pengukuran.
+
+82
+00:09:26,062 --> 00:09:36,141
+Lihat paket gelombang elektron bebas ini. Ia merambat sambil melebar, karena komponen momentumnya bergerak dengan kecepatan berbeda.
+
+83
+00:09:36,141 --> 00:09:42,601
+Warna menunjukkan fase psi yang berputar lebih cepat untuk komponen berenergi lebih tinggi.
+
+84
+00:09:45,200 --> 00:09:54,056
+Jika potensial tidak bergantung waktu, psi dapat dipisah: fungsi ruang dikali faktor fase e pangkat minus i E t per h bar.
+
+85
+00:09:54,056 --> 00:10:01,591
+Bagian ruangnya memenuhi persamaan Schrödinger tidak bergantung waktu: H topi psi sama dengan E psi.
+
+86
+00:10:01,591 --> 00:10:08,829
+Ini persamaan eigen untuk energi. Solusinya adalah tingkat-tingkat energi yang diizinkan.
+
+87
+00:10:08,829 --> 00:10:13,868
+Faktor fase itu berputar seperti jarum jam, tetapi panjangnya tetap.
+
+88
+00:10:13,868 --> 00:10:21,106
+Karena itu psi kuadrat sama sekali tidak berubah. Keadaan ini disebut stasioner.
+
+89
+00:10:21,106 --> 00:10:28,421
+Lain halnya dengan superposisi dua energi berbeda. Kedua jam berputar dengan kecepatan berbeda.
+
+90
+00:10:28,421 --> 00:10:35,270
+Hasilnya, rapat peluang berayun bolak-balik dengan frekuensi selisih energi dibagi h.
+
+91
+00:10:35,270 --> 00:10:43,451
+Muatan yang berayun seperti ini adalah antena kecil. Inilah awal mula serapan dan pancaran cahaya.
+
+92
+00:10:46,067 --> 00:10:53,859
+Aturan keenam berlaku untuk partikel identik. Dua elektron tidak bisa diberi label atau ditandai.
+
+93
+00:10:53,859 --> 00:11:01,206
+Elektron juga memiliki spin, momentum sudut intrinsik yang hanya punya dua arah: atas atau bawah.
+
+94
+00:11:01,206 --> 00:11:10,341
+Tahun 1922, Stern dan Gerlach melewatkan berkas atom perak melalui magnet tak seragam. Berkas itu terbelah tepat menjadi dua.
+
+95
+00:11:10,341 --> 00:11:17,956
+Elektron termasuk fermion. Jika dua elektron dipertukarkan, fungsi gelombangnya harus berganti tanda.
+
+96
+00:11:17,956 --> 00:11:25,514
+Partikel lain, seperti foton dan inti helium empat, termasuk boson: fungsinya tidak berganti tanda.
+
+97
+00:11:25,514 --> 00:11:29,876
+Sekarang paksa dua elektron menempati spin-orbital yang sama.
+
+98
+00:11:29,876 --> 00:11:36,148
+Fungsi antisimetrinya menjadi selisih dua suku yang identik, sehingga hasilnya nol.
+
+99
+00:11:36,148 --> 00:11:45,593
+Fungsi nol bukan keadaan fisis. Inilah larangan Pauli: tidak ada dua elektron dengan keempat bilangan kuantum yang sama.
+
+100
+00:11:48,200 --> 00:11:51,819
+Larangan Pauli adalah alasan kimia ada.
+
+101
+00:11:51,819 --> 00:12:01,143
+Tanpa larangan itu, semua elektron akan jatuh ke orbital terendah, satu s, dan semua unsur akan berperilaku mirip.
+
+102
+00:12:01,143 --> 00:12:07,415
+Dengan larangan Pauli, setiap orbital hanya menampung dua elektron berspin berlawanan.
+
+103
+00:12:07,415 --> 00:12:12,643
+Elektron mengisi orbital dari energi terendah, membentuk kulit-kulit.
+
+104
+00:12:12,643 --> 00:12:20,270
+Karbon, dengan enam elektron, memiliki konfigurasi satu s dua, dua s dua, dua p dua.
+
+105
+00:12:20,270 --> 00:12:27,496
+Dua elektron dua p itu menempati orbital berbeda dengan spin sejajar, sesuai aturan Hund.
+
+106
+00:12:27,496 --> 00:12:34,723
+Kulit yang terisi penuh membuat gas mulia stabil. Elektron di kulit terluar menentukan valensi.
+
+107
+00:12:34,723 --> 00:12:40,806
+Pola pengisian inilah yang menghasilkan baris dan golongan pada tabel periodik.
+
+108
+00:12:43,400 --> 00:12:50,060
+Ikatan kimia paling sederhana, molekul hidrogen, juga lahir dari aturan yang sama.
+
+109
+00:12:50,060 --> 00:12:56,709
+Ketika dua atom hidrogen mendekat, orbital satu s keduanya dapat bersuperposisi.
+
+110
+00:12:56,709 --> 00:13:02,504
+Jika dijumlahkan sefase, kedua gelombang saling menguatkan di antara inti.
+
+111
+00:13:02,504 --> 00:13:10,319
+Elektron yang berkumpul di sana menarik kedua inti. Ini orbital ikatan, berenergi lebih rendah.
+
+112
+00:13:10,319 --> 00:13:17,768
+Jika dikurangkan, muncul simpul di tengah. Ini orbital antiikatan, berenergi lebih tinggi.
+
+113
+00:13:17,768 --> 00:13:24,806
+Dua elektron dengan spin berlawanan menempati orbital ikatan. Larangan Pauli mengizinkannya.
+
+114
+00:13:24,806 --> 00:13:30,589
+Kurva energinya memiliki lembah pada jarak sekitar nol koma tujuh empat angstrom.
+
+115
+00:13:30,589 --> 00:13:37,804
+Untuk memutus ikatan ini dibutuhkan sekitar empat ratus tiga puluh enam kilojoule per mol.
+
+116
+00:13:40,400 --> 00:13:46,660
+Spektroskopi adalah cara kimiawan bertanya langsung kepada keadaan eigen energi.
+
+117
+00:13:46,660 --> 00:13:55,328
+Molekul hanya menyerap foton yang energinya tepat sama dengan selisih dua tingkat energi: delta E sama dengan h nu.
+
+118
+00:13:55,328 --> 00:14:03,686
+Selama transisi, keadaan berada dalam superposisi, dan muatannya berayun pada frekuensi cahaya itu.
+
+119
+00:14:03,686 --> 00:14:13,108
+Contohnya atom hidrogen: transisi dari tingkat tiga ke tingkat dua memancarkan garis merah enam ratus lima puluh enam nanometer.
+
+120
+00:14:13,108 --> 00:14:18,048
+Energi fotonnya sekitar satu koma delapan sembilan elektronvolt.
+
+121
+00:14:18,048 --> 00:14:28,813
+Setiap jenis gerak memberi daerah spektrum sendiri: elektron di ultraungu dan cahaya tampak, vibrasi di inframerah, dan rotasi di gelombang mikro.
+
+122
+00:14:28,813 --> 00:14:36,039
+Karena tingkat energi tiap molekul berbeda, spektrumnya menjadi sidik jari untuk mengenalinya.
+
+123
+00:14:38,633 --> 00:14:44,916
+Spin bukan hanya milik elektron. Proton di inti hidrogen juga memiliki spin setengah.
+
+124
+00:14:44,916 --> 00:14:51,954
+Di dalam medan magnet kuat, spin itu terbelah menjadi dua tingkat energi, mirip berkas Stern-Gerlach.
+
+125
+00:14:51,954 --> 00:15:01,090
+Selisih energinya sesuai dengan gelombang radio. Untuk proton, sekitar empat puluh dua koma enam megahertz per tesla.
+
+126
+00:15:01,090 --> 00:15:09,626
+Di laboratorium kimia, spektrometer NMR empat ratus megahertz memakai magnet sekitar sembilan koma empat tesla.
+
+127
+00:15:09,626 --> 00:15:17,230
+Lingkungan kimia menggeser frekuensi itu sedikit, sehingga NMR dapat memetakan struktur molekul.
+
+128
+00:15:17,230 --> 00:15:26,543
+Di rumah sakit, prinsip yang sama menjadi MRI. Mesin satu koma lima tesla bekerja pada sekitar enam puluh empat megahertz.
+
+129
+00:15:26,543 --> 00:15:33,014
+Proton di dalam air dan lemak tubuh memberi sinyal, dan gambar organ disusun tanpa sinar-X.
+
+130
+00:15:35,600 --> 00:15:41,194
+Persamaan Schrödinger untuk molekul nyata tidak dapat diselesaikan dengan pensil.
+
+131
+00:15:41,194 --> 00:15:48,409
+Tetapi komputer dapat menyelesaikannya secara pendekatan, dengan memakai semua aturan tadi.
+
+132
+00:15:48,409 --> 00:15:56,779
+Fungsi gelombang disusun dari fungsi basis, dibuat antisimetri sesuai Pauli, lalu energinya diminimalkan.
+
+133
+00:15:56,779 --> 00:16:03,440
+Teori fungsional kerapatan, atau DFT, bahkan bekerja langsung dengan rapat elektron.
+
+134
+00:16:03,440 --> 00:16:09,711
+Walter Kohn dan John Pople menerima Nobel Kimia tahun 1998 untuk metode-metode ini.
+
+135
+00:16:09,711 --> 00:16:20,345
+Kini industri farmasi, katalis, dan baterai memakai perhitungan kuantum untuk menyaring kandidat molekul sebelum disintesis di laboratorium.
+
+136
+00:16:22,933 --> 00:16:27,396
+Aturan main kuantum kini juga dipakai sebagai teknologi.
+
+137
+00:16:27,396 --> 00:16:34,056
+Bit biasa bernilai nol atau satu. Qubit dapat berada dalam superposisi keduanya.
+
+138
+00:16:34,056 --> 00:16:43,581
+Saat dibaca, qubit runtuh menjadi nol atau satu, dengan peluang c kuadrat. Persis aturan pengukuran yang kita pelajari.
+
+139
+00:16:43,581 --> 00:16:50,407
+Salah satu jenis qubit adalah rangkaian superkonduktor yang tingkat energinya terkuantisasi.
+
+140
+00:16:50,407 --> 00:16:59,886
+Nobel Fisika 2025 diberikan untuk penemuan kuantisasi energi dan penerowongan kuantum pada rangkaian listrik semacam ini.
+
+141
+00:16:59,886 --> 00:17:07,987
+Salah satu tujuan utamanya adalah kimia: menghitung molekul yang terlalu rumit bagi komputer biasa.
+
+142
+00:17:10,400 --> 00:17:13,830
+Mari kita rangkai keenam aturan main itu.
+
+143
+00:17:13,830 --> 00:17:19,656
+Satu: keadaan dinyatakan oleh psi, dan psi kuadrat adalah rapat peluang.
+
+144
+00:17:19,656 --> 00:17:25,470
+Dua: setiap besaran fisis diwakili oleh operator linear Hermitian.
+
+145
+00:17:25,470 --> 00:17:30,730
+Tiga: hasil ukur adalah nilai eigen, dengan peluang c n kuadrat.
+
+146
+00:17:30,730 --> 00:17:35,223
+Empat: rata-rata banyak pengukuran adalah nilai harapan.
+
+147
+00:17:35,223 --> 00:17:38,962
+Lima: psi berubah menurut persamaan Schrödinger.
+
+148
+00:17:38,962 --> 00:17:45,388
+Enam: fungsi fermion identik antisimetri, sehingga berlaku larangan Pauli.
+
+149
+00:17:45,388 --> 00:17:51,948
+Dari enam aturan ini lahir tabel periodik, ikatan kimia, spektrum, hingga MRI.
+
+150
+00:17:51,948 --> 00:18:00,873
+Dan pola titik-titik elektron di layar tadi ternyata hanya psi kuadrat yang sedang dibaca, satu elektron demi satu elektron.
