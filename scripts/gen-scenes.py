@@ -14,7 +14,7 @@ root = Path(__file__).resolve().parent.parent
 have = [(i, f) for i, f in SCENES if (root / "src/scenes" / f"{f}.tsx").exists()]
 lines = ["import type React from 'react';"]
 lines += [f"import {{{f}}} from './{f}';" for _, f in sorted(have, key=lambda x: x[1])]
-lines += ["import {Placeholder} from './Placeholder';", "", "// Pemetaan id scene di naskah → komponen visual.",
+lines += (["import {Placeholder} from './Placeholder';"] if len(have) < len(SCENES) else []) + ["", "// Pemetaan id scene di naskah → komponen visual.",
           "export const SCENES: Record<string, React.FC> = {"]
 names = dict(have)
 lines += [f"  {i}: {names.get(i, 'Placeholder')}," for i, _ in SCENES]
