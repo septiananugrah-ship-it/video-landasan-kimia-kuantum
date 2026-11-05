@@ -11,7 +11,7 @@ const Letters: React.FC<{text: string; t: number; start: number; step: number; s
     {text.split('').map((ch, i) => {
       const p = ramp(t, start + i * step, start + i * step + 0.9);
       return (
-        <span key={i} style={{display: 'inline-block', whiteSpace: 'pre', opacity: p, translate: `0px ${(1 - p) * 40}px`, filter: `blur(${(1 - p) * 12}px)`}}>
+        <span key={i} style={{display: 'inline-block', whiteSpace: 'pre', opacity: p, translate: `0px ${(1 - p) * 40}px`}}>
           {ch}
         </span>
       );

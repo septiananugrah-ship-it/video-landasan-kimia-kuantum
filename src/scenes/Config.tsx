@@ -72,8 +72,8 @@ export const Config: React.FC = () => {
               </Label>
             </g>
           ))}
-          <SpinArrow x={860 - 22} y={mix(340, 680, g1)} up len={80} opacity={g1 > 0 ? 1 : 0} />
-          <SpinArrow x={860 + 22} y={mix(340, 680, g2)} up={false} len={80} opacity={g2 > 0 ? 1 : 0} />
+          <SpinArrow x={860 - 22} y={mix(340, 680, g1)} up len={80} opacity={Math.min(1, g1 * 8)} />
+          <SpinArrow x={860 + 22} y={mix(340, 680, g2)} up={false} len={80} opacity={Math.min(1, g2 * 8)} />
           {/* elektron ketiga: jatuh ke 1s yang sudah penuh, memantul, lalu menetap di 2s */}
           <SpinArrow
             x={bounce > 0 ? mix(860, 1100, bounce) : 860}
@@ -81,7 +81,7 @@ export const Config: React.FC = () => {
             up
             len={80}
             color={bounce > 0.95 ? C.gold : C.red}
-            opacity={g3 > 0 ? 1 : 0}
+            opacity={Math.min(1, g3 * 8)}
           />
           <g opacity={ramp(t, cue(0) + 1.5, cue(0) + 1.9) * (1 - ramp(t, cue(0) + 2.4, cue(0) + 2.8))}>
             <Label x={950} y={700} size={30} color={C.red} weight={700} anchor="start">
@@ -114,7 +114,7 @@ export const Config: React.FC = () => {
               </Label>
               {Array.from({length: a.n}, (_, k) => {
                 const p = ramp(t, cue(1) + 0.6 + i * 0.5 + k * 0.22, cue(1) + 1.2 + i * 0.5 + k * 0.22, EASE_IN);
-                return <SpinArrow key={k} x={a.x - ((a.n - 1) * 17) / 2 + k * 17} y={mix(470, 675, p)} up len={70} opacity={p > 0 ? 1 : 0} />;
+                return <SpinArrow key={k} x={a.x - ((a.n - 1) * 17) / 2 + k * 17} y={mix(470, 675, p)} up len={70} opacity={Math.min(1, p * 8)} />;
               })}
             </g>
           ))}

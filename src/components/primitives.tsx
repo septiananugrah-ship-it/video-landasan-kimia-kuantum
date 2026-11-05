@@ -450,7 +450,7 @@ export const Sup: React.FC<{children: React.ReactNode; color?: string}> = ({chil
 
 /** Bagian rumus yang muncul bertahap (p: 0..1) mengikuti narasi. */
 export const Part: React.FC<{p: number; children: React.ReactNode; color?: string}> = ({p, children, color}) => (
-  <span style={{opacity: p, color, filter: p < 0.99 ? `blur(${(1 - p) * 3}px)` : undefined}}>{children}</span>
+  <span style={{opacity: p, color}}>{children}</span>
 );
 
 /** Kartu rumus utama: ≥ 56 px, satu per momen. */

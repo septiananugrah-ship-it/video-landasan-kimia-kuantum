@@ -30,8 +30,10 @@ export const Bond: React.FC = () => {
   const xa = -R / 2;
   const xb = R / 2;
   const prof = ramp(t, cue(1) + 1.0, cue(1) + 2.0);
-  const sum = win(t, cue(2), cue(4) - 0.1, 0.8, 0.5);
-  const diff = ramp(t, cue(4), cue(4) + 0.8);
+  // baris 5 (dua elektron mengisi σ): profil kembali ke orbital ikatan (silang-pudar dari σ*)
+  const back = ramp(t, cue(5) - 0.1, cue(5) + 0.7, EASE_IN_OUT);
+  const sum = Math.max(win(t, cue(2), cue(4) - 0.1, 0.8, 0.5), back);
+  const diff = ramp(t, cue(4), cue(4) + 0.8) * (1 - back);
   const mo = ramp(t, cue(3) + 0.4, cue(3) + 1.4);
   const moStar = ramp(t, cue(4) + 0.6, cue(4) + 1.4);
   const elec = ramp(t, cue(5) + 0.2, cue(5) + 1.0, BACK);

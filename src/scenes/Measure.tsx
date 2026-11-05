@@ -58,12 +58,20 @@ export const Measure: React.FC = () => {
   const counts = [0, 0];
   for (let k = 0; k < n; k++) counts[RESULTS[k] ? 0 : 1]++;
   const total = Math.max(1, counts[0] + counts[1]);
+  // batang histogram bergeser halus dari nilai sebelum ke sesudah tiap percobaan (bukan lompat 1 frame)
+  const prevCounts = [0, 0];
+  for (let k = 0; k < n - 1; k++) prevCounts[RESULTS[k] ? 0 : 1]++;
+  const qStep = prog * N_TRIALS - n;
+  const blend = EASE_IN_OUT(Math.min(1, Math.max(0, qStep * 4)));
+  const barFrac = (i: number) => mix(n > 1 ? prevCounts[i] / (n - 1) : 0, n ? counts[i] / total : 0, blend);
   const collapse = ramp(t, wordOf(6, 'runtuh') - 0.2, wordOf(6, 'runtuh') + 1.0, EASE_IN_OUT);
   const again = ramp(t, cue(7), cue(7) + 0.4);
   const extra = Math.floor(Math.max(0, t - cue(7) - 0.3) / 0.45);
   const fresh = (t - tA) / ((tB - tA) / N_TRIALS);
   const lastRes = n > 0 ? RESULTS[n - 1] : true;
-  const flash = n > 0 && t < tB ? Math.max(0, 1 - ((fresh % 1) * 2.2)) * (n < 30 ? 1 : 0.5) : 0;
+  // kilatan detektor tiap pengukuran: naik cepat tapi halus (bukan gigi gergaji), amplitudo & akhir kontinu
+  const fph = ((fresh % 1) + 1) % 1;
+  const flash = n > 0 ? Math.min(1, fph * 10) * Math.max(0, 1 - fph * 2.2) * mix(1, 0.5, Math.min(1, Math.max(0, (n - 20) / 20))) * (1 - ramp(t, tB - 0.4, tB)) : 0;
   const s2 = mix(1, 0, collapse);
   const s1 = mix(1, 1.25, collapse);
   return (
@@ -105,8 +113,7 @@ export const Measure: React.FC = () => {
         <g opacity={det}>
           <line x1={1160} y1={BASE} x2={1780} y2={BASE} stroke={C.muted} strokeWidth={2} />
           {BIN.map((b, i) => {
-            const frac = counts[i] / total;
-            const h = n ? frac * MAXH : 0;
+            const h = barFrac(i) * MAXH;
             return (
               <g key={i}>
                 <rect x={b.x - 80} y={BASE - h} width={160} height={h} rx={10} fill={b.col} opacity={0.85} />
@@ -114,13 +121,13 @@ export const Measure: React.FC = () => {
                 <Label x={b.x} y={BASE + 34} size={26} color={b.col} weight={600}>
                   {b.label}
                 </Label>
-                <Label x={b.x} y={BASE - h - 30} size={28} color={C.ink} font="mono" opacity={n ? 1 : 0}>
+                <Label x={b.x} y={BASE - h - 30} size={28} color={C.ink} font="mono" opacity={ramp(t, tA, tA + 0.4)}>
                   {`${counts[i]}`}
                 </Label>
               </g>
             );
           })}
-          <Label x={1470} y={400} size={26} color={C.muted} opacity={n ? 1 : 0}>
+          <Label x={1470} y={400} size={26} color={C.muted} opacity={ramp(t, tA, tA + 0.4)}>
             {`${n} kali pengukuran`}
           </Label>
         </g>

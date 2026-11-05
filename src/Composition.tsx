@@ -13,24 +13,19 @@ import {FPS, TIMELINE, lineKey, type TScene} from './timeline.ts';
 export {defaultVideoProps, type VideoProps};
 
 
-/** Bingkai kamera: dorongan pelan + transisi masuk/keluar sinematik. */
+/**
+ * Pergantian adegan: adegan lama naik sedikit & memudar habis tepat sebelum batas,
+ * adegan baru turun masuk sesudahnya (tidak ada dua adegan bertumpuk).
+ * Sengaja tanpa blur CSS (Chrome menerapkannya mendadak); hanya translate + opacity.
+ */
 const SceneShell: React.FC<{children: React.ReactNode}> = ({children}) => {
   const {t, dur} = useScene();
-  // Transisi "zoom-through": bab lama maju & memudar habis tepat sebelum batas,
-  // bab baru muncul dari kedalaman sesudahnya — tidak ada dua bab yang bertumpuk.
-  const enter = ramp(t, 0, 0.65, EASE);
-  const exit = ramp(t, dur - 0.55, dur + 0.05, EASE_IN_OUT);
-  const push = 1 + 0.03 * (t / Math.max(dur, 1));
-  const scale = push * (0.94 + 0.06 * enter) * (1 + 0.07 * exit);
-  const blur = 14 * (1 - enter) + 18 * exit;
+  const enter = ramp(t, 0, 0.8, EASE);
+  const exit = ramp(t, dur - 0.7, dur + 0.05, EASE_IN_OUT);
+  const swayX = 4 * Math.sin(t * 0.31 + 1.3);
+  const swayY = 3 * Math.sin(t * 0.23) + 22 * (1 - enter) - 18 * exit;
   return (
-    <AbsoluteFill
-      style={{
-        opacity: enter * (1 - exit),
-        scale: String(scale),
-        filter: blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : undefined,
-      }}
-    >
+    <AbsoluteFill style={{opacity: enter * (1 - exit), willChange: 'transform', translate: `${swayX.toFixed(2)}px ${swayY.toFixed(2)}px`}}>
       {children}
     </AbsoluteFill>
   );

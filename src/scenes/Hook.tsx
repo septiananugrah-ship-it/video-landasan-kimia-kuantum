@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill} from 'remotion';
+import {AbsoluteFill, interpolate} from 'remotion';
 import {BACK, EASE_IN_OUT, rand, ramp, win} from '../anim';
 import {Badge, Glow, Label, Stage} from '../components/primitives';
 import {fringe, sampleRho} from '../components/qm';
@@ -35,7 +35,7 @@ export const DotScreen: React.FC<{count: number; x?: number; y?: number; w?: num
   <g opacity={opacity}>
     {HOOK_DOTS.slice(0, count).map((u, k) => {
       const isNew = fresh > 0 && k >= count - 1;
-      const r = count < 200 ? 4.2 : count < 1500 ? 3 : 2.2;
+      const r = interpolate(count, [120, 400, 1200, 2200], [4.2, 3, 3, 2.2], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
       return <circle key={k} cx={x + u * w} cy={y + 14 + rand(k * 3.71 + 0.2) * (h - 28)} r={isNew ? r * (1 + 2 * fresh) : r} fill={isNew ? '#fff' : C.cyan} opacity={isNew ? 1 : 0.8} />;
     })}
   </g>

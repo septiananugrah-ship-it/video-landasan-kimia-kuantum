@@ -29,8 +29,10 @@ export const Expect: React.FC = () => {
   const bal = ramp(t, cue(3) - 0.2, cue(3) + 1.6, EASE_IN_OUT);
   const fx = ex(mix(2.5, MEAN, bal));
   // papan jungkat-jungkit: miring sebelum fulkrum pindah ke titik seimbang
-  // sisi 3/4 (kanan) lebih berat → papan miring ke kanan (searah jarum jam) sebelum fulkrum pindah
-  const tilt = mix(6, 0, bal);
+  // torsi terhadap fulkrum awal (2,5 eV): 1/4 di 1 eV menarik ke kiri, 3/4 di 4 eV ke kanan.
+  // Hanya balok 1/4 → miring ke kiri; setelah 3/4 muncul → miring ke kanan (6° saat keduanya penuh).
+  const torque = 0.25 * bar1 * (1 - 2.5) + 0.75 * bar4 * (4 - 2.5);
+  const tilt = 8 * torque * (1 - bal);
   const never = win(t, cue(4), cue(5) - 0.1, 0.5, 0.4);
   const drop = Math.floor(Math.max(0, t - cue(4) - 0.3) / 0.7);
   const dropE = drop % 3 === 1 ? 1 : 4;

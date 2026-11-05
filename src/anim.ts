@@ -1,6 +1,6 @@
 import {Easing, interpolate} from 'remotion';
 
-export const EASE = Easing.bezier(0.16, 1, 0.3, 1);
+export const EASE = Easing.bezier(0.3, 0.05, 0.15, 1);
 export const EASE_IN_OUT = Easing.bezier(0.65, 0, 0.35, 1);
 export const EASE_IN = Easing.bezier(0.5, 0, 0.75, 0);
 export const BACK = Easing.bezier(0.34, 1.56, 0.64, 1);
@@ -9,7 +9,8 @@ const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
 /** 0→1 antara detik a dan b. */
 export const ramp = (t: number, a: number, b: number, easing: (x: number) => number = EASE) =>
-  interpolate(t, [a, b], [0, 1], {...clamp, easing});
+  // Pengaman: bila jeda narasi nyata membuat b ≤ a, pakai durasi minimum alih-alih error.
+  interpolate(t, [a, Math.max(b, a + 0.05)], [0, 1], {...clamp, easing});
 
 /** Muncul pada a..a+inDur lalu hilang pada b..b+outDur. */
 export const win = (t: number, a: number, b: number, inDur = 0.6, outDur = 0.6) =>
@@ -21,6 +22,9 @@ export const win = (t: number, a: number, b: number, inDur = 0.6, outDur = 0.6) 
  */
 export const slot = (t: number, a: number, b: number, inDur = 0.55, outDur = 0.35) =>
   Math.min(ramp(t, a, a + inDur), 1 - ramp(t, b - outDur, b, EASE_IN_OUT));
+
+// siklus berulang tanpa muncul mendadak (asap, cincin, gelembung)
+export const cyc = (ph: number) => Math.min(1, ph * 6) * (1 - ph);
 
 export const mix = (a: number, b: number, p: number) => a + (b - a) * p;
 

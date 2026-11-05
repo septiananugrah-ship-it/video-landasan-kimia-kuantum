@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
-import {BACK, rand, ramp, slot, win} from '../anim';
+import {BACK, EASE_IN_OUT, mix, rand, ramp, slot, win} from '../anim';
 import {Badge, Formula, Frac, Hbar, Label, Op, Stage, V} from '../components/primitives';
 import {PhaseWave, PhaseWheel, cabs, freePacket} from '../components/qm';
 import {useScene} from '../SceneContext';
@@ -24,9 +24,10 @@ export const TDSE: React.FC = () => {
   // (τ = 8: paket masih utuh di dalam layar)
   const run1 = ramp(t, cue(0) + 1.4, meas, (x) => x) * 4;
   const run2 = ramp(t, cue(5) - 0.2, cue(6) + 4, (x) => x) * 8;
-  const phase2 = t >= cue(5) - 0.2;
-  const tau = phase2 ? run2 : run1;
-  const collapse = !phase2 && t > meas ? ramp(t, meas, meas + 0.4) : 0;
+  // fase 2 bersilang-pudar dari keadaan terukur (bukan ganti mendadak di satu frame)
+  const re = ramp(t, cue(5) - 0.2, cue(5) + 0.5, EASE_IN_OUT);
+  const collapseRaw = t > meas ? ramp(t, meas, meas + 0.4) : 0;
+  const collapse = collapseRaw * (1 - re);
   // posisi hasil ukur: diambil dari |ψ|² saat τ = 4
   const hit = (() => {
     const f = pk(4);
@@ -43,8 +44,8 @@ export const TDSE: React.FC = () => {
     }
     return best;
   })();
-  const ghosts = phase2 ? [] : [0, 1, 2, 3].filter((g) => g < run1 - 0.2);
-  const clock = phase2 ? tau : run1;
+  const ghosts = [0, 1, 2, 3].filter((g) => g < run1 - 0.2);
+  const clock = mix(run1, run2, re);
   return (
     <AbsoluteFill>
       <Stage>
@@ -55,13 +56,18 @@ export const TDSE: React.FC = () => {
           </Label>
           {/* jejak waktu sebelumnya (fase 1) */}
           {ghosts.map((g) => (
-            <g key={g} opacity={0.18 * (1 - collapse)}>
+            <g key={g} opacity={0.18 * (1 - collapseRaw) * (1 - re)}>
               <PhaseWave f={pk(g)} x={AX.x} y={AX.y} w={AX.w} sy={AX.sy} n={200} outline={false} />
             </g>
           ))}
-          <g opacity={1 - collapse}>
-            <PhaseWave f={pk(tau)} x={AX.x} y={AX.y} w={AX.w} sy={AX.sy} n={260} />
+          <g opacity={(1 - collapseRaw) * (1 - re)}>
+            <PhaseWave f={pk(run1)} x={AX.x} y={AX.y} w={AX.w} sy={AX.sy} n={260} />
           </g>
+          {re > 0.001 ? (
+            <g opacity={re}>
+              <PhaseWave f={pk(run2)} x={AX.x} y={AX.y} w={AX.w} sy={AX.sy} n={260} />
+            </g>
+          ) : null}
           {/* runtuh menjadi satu titik saat diukur */}
           {collapse > 0 ? (
             <g>
